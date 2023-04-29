@@ -1,0 +1,17 @@
+<app-chat-history></app-chat-history>
+<div class="chat">
+
+  <div class="log">
+    <ng-container *ngFor="let message of log">
+      <app-chat-row [message]="message"></app-chat-row>
+    </ng-container>
+  </div>
+
+  <div class="input">
+    <textarea placeholder="Send a message." autosize
+      (keydown.enter)="onEnterPress($event);"
+      [(ngModel)]="message"
+    ></textarea>
+  </div>
+
+</div>

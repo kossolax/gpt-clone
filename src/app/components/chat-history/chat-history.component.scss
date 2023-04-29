@@ -1,0 +1,37 @@
+:host {
+  background-color: rgb(32, 33, 35);
+  border: 0px solid rgb(217, 217, 217);
+  color: white;
+
+  display: flex;
+  width: 260px;
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    width: 100%;
+
+    button {
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+
+      background-color: inherit;
+      color: inherit;
+      padding: 12px;
+      margin-bottom: 4px;
+      width: 100%;
+      cursor: pointer;
+
+      &::before {
+        content: "+";
+      }
+      &:hover {
+        background-color: hsla(240, 9%, 59%, 0.1);
+      }
+
+    }
+  }
+
+}
+
