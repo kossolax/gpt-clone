@@ -13,22 +13,25 @@
     width: 100%;
 
     button {
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
 
       background-color: inherit;
       color: inherit;
-      padding: 12px;
-      margin-bottom: 4px;
-      width: 100%;
+      border: 0;
+
+      &.full {
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 12px;
+        margin-bottom: 4px;
+        width: 100%;
+
+        &:hover {
+          background-color: hsla(240, 9%, 59%, 0.1);
+        }
+      }
+
       cursor: pointer;
 
-      &::before {
-        content: "+";
-      }
-      &:hover {
-        background-color: hsla(240, 9%, 59%, 0.1);
-      }
 
     }
   }

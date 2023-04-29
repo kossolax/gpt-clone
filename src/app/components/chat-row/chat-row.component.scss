@@ -1,0 +1,48 @@
+:host {
+
+  .background {
+    padding-bottom: 1.5rem;
+    padding-top: 1.5rem;
+    border-bottom: rgba(0, 0, 0, .1) solid 1px;
+
+    &.system {
+      background-color: rgb(247, 247, 247);
+    }
+    &.message {
+      background-color: rgb(255, 255, 255);
+    }
+  }
+
+
+  .short {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: auto;
+    max-width: 42rem;
+    width: 100%;
+    gap: 1rem;
+
+    figure {
+      background-color: black;
+      color: white;
+      width: 2.0rem;
+      height: 2.0rem;
+
+      svg {
+        width: 2rem;
+        height: 2rem;
+        padding: 0.25rem;
+      }
+      img {
+        width: 2.0rem;
+        height: 2.0rem;
+      }
+
+    }
+    span {
+      width: 100%;
+    }
+  }
+
+}

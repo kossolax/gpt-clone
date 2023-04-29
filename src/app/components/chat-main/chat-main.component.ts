@@ -12,12 +12,19 @@ import { ChatInput } from 'src/app/classes/chat';
 export class ChatMainComponent {
   message: string = '';
 
-  log: ChatInput[] = [];
+  log: ChatInput[] = [
+    {message: "Welcome to the chat!", type: "system"},
+    {message: "Type a message and press enter to send it.", type: "message"},
+    {message: "Welcome to the chat!", type: "system"},
+  ];
 
 
   onEnterPress(event: Event) {
-    this.log.push({message: this.message, type: "message"});
-    this.message = "";
+    const message = this.message.trim();
+    if( message.length > 0 ) {
+      this.log.push({message: this.message, type: "message"});
+      this.message = "";
+    }
     return false;
   }
 }
