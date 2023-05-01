@@ -7,7 +7,7 @@
     </figure>
 
     <span class="content">
-      {{ message.content }}
+      <markdown data="{{message.content}}" clipboard></markdown>
       <i *ngIf="message.role === 'assistant' && writing" class="caret">&#9608;</i>
     </span>
   </div>

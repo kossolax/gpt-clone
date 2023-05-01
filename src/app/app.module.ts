@@ -9,6 +9,7 @@ import { ChatRowComponent } from './components/chat-row/chat-row.component';
 import { ChatHistoryComponent } from './components/chat-history/chat-history.component';
 import { AutosizeModule } from 'ngx-autosize';
 import { FormsModule } from '@angular/forms';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { FormsModule } from '@angular/forms';
     AppRoutingModule,
     FormsModule,
     AutosizeModule,
+    MarkdownModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
