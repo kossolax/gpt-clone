@@ -32,15 +32,14 @@ export class ChatMainComponent {
         responseType: 'text',
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
-        })
-      });
-      
-      const body = JSON.stringify([
+        }),
+        body: JSON.stringify([
           { "role": "system", "content": "You are an helpful assistant." },
           { "role": "user", "content": message }
-      ]);
+        ])
+      });
       
-      this.http.request(req, body).subscribe(
+      this.http.request<string>(req).subscribe(
         event => {
           if ( event.type == HttpEventType.Sent )
             this.log.push({message: "", type: "system"});
