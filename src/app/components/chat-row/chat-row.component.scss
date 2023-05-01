@@ -45,12 +45,11 @@
       }
 
     }
-    span {
+    .content {
       width: 100%;
     }
     .caret {
-      height: auto;
-      width: auto;
+      font-style: normal;
       animation: blink-caret 1s step-end infinite;
     }
   }

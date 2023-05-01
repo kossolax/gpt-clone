@@ -6,9 +6,9 @@
       <img *ngIf="message.role === 'user'" width="41" height="41" src="https://ui-avatars.com/api/?name=Steve+Zaretti" />
     </figure>
 
-    <span>
+    <span class="content">
       {{ message.content }}
-      <span *ngIf="message.role === 'assistant' && message.writing" class="caret">&#9608;</span>
+      <i *ngIf="message.role === 'assistant' && writing" class="caret">&#9608;</i>
     </span>
   </div>
 </div>
