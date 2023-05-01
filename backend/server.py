@@ -26,10 +26,9 @@ def chat():
   ]
   
   try: 
-    data = request.get_json()
-    prompt = data.body
+    prompt = request.get_json()
   except:
-    pass
+    return "Error"
   
   def generate():
     responses = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=prompt, temperature=0.9, top_p= 0.1, stream=True)
