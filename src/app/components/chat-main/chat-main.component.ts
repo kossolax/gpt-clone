@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpRequest, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEventType, HttpDownloadProgressEvent  } from '@angular/common/http';
 import { ChatInput } from 'src/app/classes/chat';
 
 
@@ -33,11 +33,11 @@ export class ChatMainComponent {
       });
       this.http.request<string>(req).subscribe(
         event => {
-          if ( event.type == 0 )
+          if ( event.type == HttpEventType.Sent )
             this.log.push({message: "", type: "system"});
-          if ( event.type == 3 )
+          if ( event.type == HttpEventType.DownloadProgress )
             this.log[this.log.length-1].message = (event as HttpDownloadProgressEvent).partialText as string;
-          if ( event.type == 4 )
+          if ( event.type == HttpEventType.Response )
             this.log[this.log.length-1].message = event.body as string;
         },
         error => {
