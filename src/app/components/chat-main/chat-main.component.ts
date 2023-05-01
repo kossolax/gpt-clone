@@ -31,7 +31,7 @@ export class ChatMainComponent {
         reportProgress: true,
         responseType: 'text',
       });
-      this.http.request(req).subscribe(
+      this.http.request<string>(req).subscribe(
         event => {
           if ( event.type == 0 )
             this.log.push({message: "", type: "system"});
