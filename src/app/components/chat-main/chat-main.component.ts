@@ -33,10 +33,10 @@ export class ChatMainComponent {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
         }),
-        body: JSON.stringify([
+        body: [
           { "role": "system", "content": "You are an helpful assistant." },
           { "role": "user", "content": message }
-        ])
+        ]
       });
       
       this.http.request<string>(req).subscribe(
