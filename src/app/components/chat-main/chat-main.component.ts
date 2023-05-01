@@ -36,9 +36,9 @@ export class ChatMainComponent {
           if ( event.type == 0 )
             this.log.push({message: "", type: "system"});
           if ( event.type == 3 )
-            this.log[this.log.length-1].message = event.responseText;
+            this.log[this.log.length-1].message = event.body;
           if ( event.type == 4 )
-            this.log[this.log.length-1].message = event.responseText;
+            this.log[this.log.length-1].message = event.body;
         },
         error => {
           console.error('Error:', error);
