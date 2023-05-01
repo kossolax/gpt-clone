@@ -11,7 +11,7 @@ import { ChatInput } from 'src/app/classes/chat';
 
 export class ChatMainComponent {
   message: string = '';
-  writing: bool = false;
+  writing: boolean = false;
 
   log: ChatInput[] = [
     {role: "system", content: "You are an helpfull assistant."},
