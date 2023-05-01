@@ -24,10 +24,9 @@ def chat():
     {"role": "system", "content": "You are a helpfull assistant."},
     {"role": "user", "content": "Hello!"}
   ]
-
-  responses = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=prompt, temperature=0.9, top_p= 0.1, stream=True)
   
   def generate():
+    responses = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=prompt, temperature=0.9, top_p= 0.1, stream=True)
     for response in responses:
       if len(response.choices) > 0:
         if response.choices[0].delta and response.choices[0].delta.content:
@@ -35,7 +34,7 @@ def chat():
         if response.choices[0].finish_reason == "stop":
           break
   
-  return return app.response_class(stream_with_context(generate()))
+  return app.response_class(stream_with_context(generate()))
 
 if __name__ == "__main__":
   # Scaleway's system will inject a PORT environment variable on which your application should start the server.
