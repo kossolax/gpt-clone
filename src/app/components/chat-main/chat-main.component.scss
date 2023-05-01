@@ -8,8 +8,6 @@
   .chat {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     width: 100%;
 
     .log {
@@ -17,12 +15,17 @@
       flex-direction: column;
       overflow: auto;
       width: 100%;
+      height: auto;
+      min-height: 100%;
 
       .input {
         display: flex;
-        align-self: flex-end;
-        
+        align-self: center;
+        justify-self: flex-end;
+        margin: auto;
+
         padding: 12px 16px 12px 16px;
+        margin-top: 16px;
         margin-bottom: 16px;
         width: 100%;
         max-width: 42rem;
