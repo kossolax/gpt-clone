@@ -3,7 +3,6 @@ import { HttpClient, HttpRequest, HttpEventType, HttpDownloadProgressEvent, Http
 import { ChatInput } from 'src/app/classes/chat';
 
 
-
 @Component({
   selector: 'app-chat-main',
   templateUrl: './chat-main.component.html',
@@ -33,11 +32,11 @@ export class ChatMainComponent {
       this.http.request<string>(req).subscribe(
         event => {
           if ( event.type == HttpEventType.Sent )
-            this.log.push({role: "assistant", content: ""});
+            this.log.push({role: "assistant", content: "", writing: true});
           if ( event.type == HttpEventType.DownloadProgress )
             this.log[this.log.length-1].content = (event as HttpDownloadProgressEvent).partialText as string;
           if ( event.type == HttpEventType.Response )
-            this.log[this.log.length-1].content = event.body as string;
+            this.log[this.log.length-1].writing = false;
         },
         error => {
           console.error('Error:', error);
