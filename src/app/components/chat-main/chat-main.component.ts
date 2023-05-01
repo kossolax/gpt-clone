@@ -33,7 +33,7 @@ export class ChatMainComponent {
       this.http.request<string>(req).subscribe(
         event => {
           if ( event.type == HttpEventType.Sent )
-            this.log.push({role: "asssistant", content: ""});
+            this.log.push({role: "assistant", content: ""});
           if ( event.type == HttpEventType.DownloadProgress )
             this.log[this.log.length-1].message = (event as HttpDownloadProgressEvent).partialText as string;
           if ( event.type == HttpEventType.Response )
