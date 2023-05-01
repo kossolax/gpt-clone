@@ -14,9 +14,7 @@ export class ChatMainComponent {
   message: string = '';
 
   log: ChatInput[] = [
-    {message: "Welcome to the chat!", type: "system"},
-    {message: "Type a message and press enter to send it.", type: "message"},
-    {message: "Welcome to the chat!", type: "system"},
+    {role: "system", content: "You are an helpfull assistant."},
   ];
 
   constructor(private http: HttpClient) { }
@@ -24,13 +22,10 @@ export class ChatMainComponent {
   onEnterPress(event: Event) {
     const message = this.message.trim();
     if( message.length > 0 ) {
-      this.log.push({message: message, type: "message"});
+      this.log.push({role: "user", content: message});
       this.message = "";
 
-      const req = new HttpRequest('POST', "https://gptclone9ud9teaw-frontend.functions.fnc.fr-par.scw.cloud/api/chat", [
-        { "role": "system", "content": "You are an helpful assistant." },
-        { "role": "user", "content": message }
-      ], {
+      const req = new HttpRequest('POST', "https://gptclone9ud9teaw-frontend.functions.fnc.fr-par.scw.cloud/api/chat", this.log, {
         reportProgress: true,
         responseType: 'text'
       });
@@ -38,7 +33,7 @@ export class ChatMainComponent {
       this.http.request<string>(req).subscribe(
         event => {
           if ( event.type == HttpEventType.Sent )
-            this.log.push({message: "", type: "system"});
+            this.log.push({role: "asssistant", content: ""});
           if ( event.type == HttpEventType.DownloadProgress )
             this.log[this.log.length-1].message = (event as HttpDownloadProgressEvent).partialText as string;
           if ( event.type == HttpEventType.Response )
