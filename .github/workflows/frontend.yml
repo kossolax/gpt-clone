@@ -36,6 +36,7 @@ jobs:
           file: Dockerfile.front
           push: true
           tags: ${{ env.IMAGE }}
+          build-args: BACKEND_KEY=${{ secrets.BACKEND_KEY }}
 
       - name: Scaleway Container Deploy action
         id: deploy
