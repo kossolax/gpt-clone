@@ -1,4 +1,5 @@
 export interface ChatInput {
-  content: string;
   role: "system"|"user"|"assistant";
+  content: string;
+  writing: bool = false;
 };
