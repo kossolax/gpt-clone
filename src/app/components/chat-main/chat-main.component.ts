@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpRequest, HttpEventType, HttpDownloadProgressEvent  } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEventType, HttpDownloadProgressEvent, HttpHeaders } from '@angular/common/http';
 import { ChatInput } from 'src/app/classes/chat';
 
 
@@ -40,7 +40,7 @@ export class ChatMainComponent {
           { "role": "user", "content": message }
       ]);
       
-      this.http.request<string>(req, body).subscribe(
+      this.http.request(req, body).subscribe(
         event => {
           if ( event.type == HttpEventType.Sent )
             this.log.push({message: "", type: "system"});
