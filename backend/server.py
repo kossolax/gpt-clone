@@ -19,7 +19,7 @@ def root():
   })
 
 @app.route("/chat")
-def root():
+def chat():
   prompt = [
     {"role": "system", "content": "You are a helpfull assistant."},
     {"role": "user", "content": "Hello!"}
