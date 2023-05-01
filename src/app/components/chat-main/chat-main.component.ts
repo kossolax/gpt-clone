@@ -30,9 +30,6 @@ export class ChatMainComponent {
       const req = new HttpRequest('POST', "https://gptclone9ud9teaw-frontend.functions.fnc.fr-par.scw.cloud/api/chat", {
         reportProgress: true,
         responseType: 'text',
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-        }),
         body: [
           { "role": "system", "content": "You are an helpful assistant." },
           { "role": "user", "content": message }
