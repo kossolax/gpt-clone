@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HttpClient, HttpRequest, HttpEventType } from '@angular/common/http';
 import { ChatInput } from 'src/app/classes/chat';
 
 
@@ -18,12 +19,26 @@ export class ChatMainComponent {
     {message: "Welcome to the chat!", type: "system"},
   ];
 
+  constructor(private http: HttpClient) { }
 
   onEnterPress(event: Event) {
     const message = this.message.trim();
     if( message.length > 0 ) {
-      this.log.push({message: this.message, type: "message"});
+      this.log.push({message: message, type: "message"});
       this.message = "";
+
+      const req = new HttpRequest('GET', "https://gptclone9ud9teaw-frontend.functions.fnc.fr-par.scw.cloud/api/chat", {
+        reportProgress: true,
+        responseType: 'text',
+      });
+      this.http.request(req).subscribe(
+        event => {
+          console.log(event)
+        },
+        error => {
+          console.error('Error:', error);
+        }
+      );
     }
     return false;
   }
