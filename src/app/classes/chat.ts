@@ -1,4 +1,4 @@
 export interface ChatInput {
-  message: string ;
-  type: "system"|"message";
+  content: string;
+  role: "system"|"user";
 };
