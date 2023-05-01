@@ -13,7 +13,7 @@ export class ChatMainComponent {
   message: string = '';
 
   log: ChatInput[] = [
-    {role: "system", content: "You are an helpfull assistant."},
+    {role: "system", content: "You are an helpfull assistant.", writing: false},
   ];
 
   constructor(private http: HttpClient) { }
@@ -21,7 +21,7 @@ export class ChatMainComponent {
   onEnterPress(event: Event) {
     const message = this.message.trim();
     if( message.length > 0 ) {
-      this.log.push({role: "user", content: message});
+      this.log.push({role: "user", content: message, writing: false});
       this.message = "";
 
       const req = new HttpRequest('POST', "https://gptclone9ud9teaw-frontend.functions.fnc.fr-par.scw.cloud/api/chat", this.log, {
