@@ -1,5 +1,4 @@
 Flask
 flask-cors
-flask-queue-sse
 
 openai
