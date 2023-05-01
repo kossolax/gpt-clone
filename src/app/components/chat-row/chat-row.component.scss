@@ -5,10 +5,10 @@
     padding-top: 1.5rem;
     border-bottom: rgba(0, 0, 0, .1) solid 1px;
 
-    &.system {
+    &.system, &.assistant {
       background-color: rgb(247, 247, 247);
     }
-    &.message {
+    &.user {
       background-color: rgb(255, 255, 255);
     }
   }
