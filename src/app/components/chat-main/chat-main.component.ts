@@ -33,7 +33,12 @@ export class ChatMainComponent {
       });
       this.http.request(req).subscribe(
         event => {
-          console.log(event)
+          if ( event.type == 0 )
+            this.log.push({message: "", type: "system"});
+          if ( event.type == 3 )
+            this.log[this.log.length-1].message = event.partialText;
+          if ( event.type == 4 )
+            this.log[this.log.length-1].message = event.body;
         },
         error => {
           console.error('Error:', error);
