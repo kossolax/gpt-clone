@@ -26,7 +26,8 @@ def chat():
   ]
   
   try: 
-    prompt = request.get_json()
+    data = request.get_json()
+    prompt = data.body
   except:
     pass
   
