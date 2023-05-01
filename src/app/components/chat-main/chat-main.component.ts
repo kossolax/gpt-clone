@@ -27,13 +27,12 @@ export class ChatMainComponent {
       this.log.push({message: message, type: "message"});
       this.message = "";
 
-      const req = new HttpRequest('POST', "https://gptclone9ud9teaw-frontend.functions.fnc.fr-par.scw.cloud/api/chat", {
+      const req = new HttpRequest('POST', "https://gptclone9ud9teaw-frontend.functions.fnc.fr-par.scw.cloud/api/chat", [
+        { "role": "system", "content": "You are an helpful assistant." },
+        { "role": "user", "content": message }
+      ], {
         reportProgress: true,
-        responseType: 'text',
-        body: [
-          { "role": "system", "content": "You are an helpful assistant." },
-          { "role": "user", "content": message }
-        ]
+        responseType: 'text'
       });
       
       this.http.request<string>(req).subscribe(
