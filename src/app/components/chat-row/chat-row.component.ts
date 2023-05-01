@@ -8,5 +8,5 @@ import { ChatInput } from 'src/app/classes/chat';
 })
 export class ChatRowComponent {
   @Input() message!: ChatInput;
-  @Input() writing!: bool;
+  @Input() writing!: boolean;
 }
