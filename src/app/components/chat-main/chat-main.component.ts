@@ -14,9 +14,16 @@ export class ChatMainComponent {
   writing: boolean = false;
 
   log: ChatInput[] = [
-    {role: "system", content: "You are an helpfull assistant."},
+    { role: "system", content: "You are a helpful assistant." },
+    { role: "assistant", content: "Thank you! How can I help you today?" },
+    { role: "user", content: "What's the weather like today?" },
+    { role: "assistant", content: "The weather today is sunny with a high of 25°C." },
+    { role: "user", content: "What should I wear for a day like this?" },
+    { role: "assistant", content: "I suggest wearing light, comfortable clothing and sunglasses. Don't forget sunscreen!", writing: false },
+    { role: "user", content: "Thanks for the advice!" },
+    { role: "assistant", content: "You're welcome! If you have any other questions, feel free to ask." },
   ];
-
+  
   constructor(private http: HttpClient) { }
 
   onEnterPress(event: Event) {

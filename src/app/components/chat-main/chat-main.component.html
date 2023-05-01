@@ -16,6 +16,7 @@
       spellcheck="false"
       (keydown.enter)="onEnterPress($event);"
       [(ngModel)]="message"
+      [disabled]="writing"
     ></textarea>
 
     <span class="button" (click)="onEnterPress($event)">
