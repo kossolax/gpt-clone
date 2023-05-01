@@ -36,7 +36,7 @@ export class ChatMainComponent {
           if ( event.type == 0 )
             this.log.push({message: "", type: "system"});
           if ( event.type == 3 )
-            this.log[this.log.length-1].message = event.body as string;
+            this.log[this.log.length-1].message = event.partialText as string;
           if ( event.type == 4 )
             this.log[this.log.length-1].message = event.body as string;
         },
