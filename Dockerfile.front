@@ -1,5 +1,7 @@
 # Build and compile the frontend
 FROM node:latest as build-stage
+ARG BACKEND_KEY
+ENV BACKEND_KEY=$BACKEND_KEY
 
 WORKDIR /app
 COPY package*.json /app/
