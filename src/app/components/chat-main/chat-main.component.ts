@@ -15,26 +15,13 @@ export class ChatMainComponent {
 
   log: ChatInput[] = [
     { role: "system", content: "You are a helpful assistant." },
-    { role: "assistant", content: "Thank you! How can I help you today?" },
-    { role: "user", content: "What's the weather like today?" },
-    { role: "assistant", content: "The weather today is sunny with a high of 25°C." },
-    { role: "user", content: "What should I wear for a day like this?" },
-    { role: "assistant", content: "I suggest wearing light, comfortable clothing and sunglasses. Don't forget sunscreen!" },
-    { role: "user", content: "Thanks for the advice!" },
-    { role: "assistant", content: "You're welcome! If you have any other questions, feel free to ask." },
-    { role: "user", content: "Can you recommend a good restaurant nearby?" },
-    { role: "assistant", content: "Sure! There's a great Italian restaurant called 'La Trattoria' just around the corner." },
-    { role: "user", content: "What's their specialty?" },
-    { role: "assistant", content: "Their signature dish is homemade pasta with a rich tomato sauce and fresh basil." },
-    { role: "user", content: "That sounds delicious! I'll give it a try." },
-    { role: "assistant", content: "I hope you enjoy your meal! If you need any more suggestions, just let me know." },
   ];
-  
+
   constructor(private http: HttpClient) { }
 
   onEnterPress(event: Event) {
     const message = this.message.trim();
-    if( message.length > 0 ) {
+    if( message.length > 0 && !this.writing ) {
       this.log.push({role: "user", content: message});
       this.message = "";
       this.writing = true;
@@ -43,7 +30,7 @@ export class ChatMainComponent {
         reportProgress: true,
         responseType: 'text'
       });
-      
+
       this.http.request<string>(req).subscribe(
         event => {
           if ( event.type == HttpEventType.Sent )
