@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpRequest, HttpEventType, HttpDownloadProgressEvent, HttpHeaders } from '@angular/common/http';
-import { ChatInput } from 'src/app/classes/chat';
+import { ChatInput, AssistantInput } from 'src/app/classes/chat';
 
 
 @Component({
@@ -36,7 +36,7 @@ export class ChatMainComponent {
           if ( event.type == HttpEventType.DownloadProgress )
             this.log[this.log.length-1].content = (event as HttpDownloadProgressEvent).partialText as string;
           if ( event.type == HttpEventType.Response )
-            this.log[this.log.length-1].writing = false;
+            (this.log[this.log.length-1] as AssistantInput).writing = false;
         },
         error => {
           console.error('Error:', error);
