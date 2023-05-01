@@ -1,0 +1,8 @@
+FROM python:3-alpine
+
+WORKDIR /usr/src/app
+COPY    ./backend/requirements.txt .
+RUN     pip install -qr requirements.txt
+
+COPY    ./backend/* .
+CMD     ["python3", "./server.py"]
