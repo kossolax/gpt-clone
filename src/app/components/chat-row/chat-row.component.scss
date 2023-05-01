@@ -1,3 +1,8 @@
+@keyframes blink-caret {
+  0%, 49.99% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
 :host {
 
   .background {
@@ -42,6 +47,12 @@
     }
     span {
       width: 100%;
+    }
+    .caret {
+      height: auto;
+      width: auto;
+      animation: blink-caret 0.5s step-end infinite;
+      color: white;
     }
   }
 
