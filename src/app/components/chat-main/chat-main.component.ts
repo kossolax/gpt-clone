@@ -35,9 +35,9 @@ export class ChatMainComponent {
           if ( event.type == HttpEventType.Sent )
             this.log.push({role: "assistant", content: ""});
           if ( event.type == HttpEventType.DownloadProgress )
-            this.log[this.log.length-1].message = (event as HttpDownloadProgressEvent).partialText as string;
+            this.log[this.log.length-1].content = (event as HttpDownloadProgressEvent).partialText as string;
           if ( event.type == HttpEventType.Response )
-            this.log[this.log.length-1].message = event.body as string;
+            this.log[this.log.length-1].content = event.body as string;
         },
         error => {
           console.error('Error:', error);
