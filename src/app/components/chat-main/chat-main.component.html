@@ -2,9 +2,12 @@
 <div class="chat">
 
   <div class="log">
-    <ng-container *ngFor="let message of log">
-      <app-chat-row [message]="message"></app-chat-row>
-    </ng-container>
+    <ng-container *ngFor="let message of log; let i = index">
+      <app-chat-row
+        [message]="message"
+        [writing]="message.role === 'assistant' && i === log.length - 1 && writing"
+      ></app-chat-row>
+    </ng-container>    
   </div>
 
   <div class="input">
