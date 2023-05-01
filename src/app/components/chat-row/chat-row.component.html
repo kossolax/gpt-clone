@@ -8,7 +8,7 @@
 
     <span>
       {{ message.content }}
-      <span *ngIf="message.writing" class="caret">&#9608;</span>
+      <span *ngIf="message.role === 'assistant' && message.writing" class="caret">&#9608;</span>
     </span>
   </div>
 </div>
