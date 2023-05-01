@@ -27,11 +27,20 @@ export class ChatMainComponent {
       this.log.push({message: message, type: "message"});
       this.message = "";
 
-      const req = new HttpRequest('GET', "https://gptclone9ud9teaw-frontend.functions.fnc.fr-par.scw.cloud/api/chat", {
+      const req = new HttpRequest('POST', "https://gptclone9ud9teaw-frontend.functions.fnc.fr-par.scw.cloud/api/chat", {
         reportProgress: true,
         responseType: 'text',
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
       });
-      this.http.request<string>(req).subscribe(
+      
+      const body = JSON.stringify([
+          { "role": "system", "content": "You are an helpful assistant." },
+          { "role": "user", "content": message }
+      ]);
+      
+      this.http.request<string>(req, body).subscribe(
         event => {
           if ( event.type == HttpEventType.Sent )
             this.log.push({message: "", type: "system"});
