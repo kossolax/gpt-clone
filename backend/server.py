@@ -18,12 +18,17 @@ def root():
     "message": "Hello World!"
   })
 
-@app.route("/chat")
+@app.route("/chat", methods = ['POST', 'GET'])
 def chat():
   prompt = [
     {"role": "system", "content": "You are a helpfull assistant."},
     {"role": "user", "content": "Hello!"}
   ]
+  
+  try: 
+    prompt = request.get_json()
+  except:
+    pass
   
   def generate():
     responses = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=prompt, temperature=0.9, top_p= 0.1, stream=True)
