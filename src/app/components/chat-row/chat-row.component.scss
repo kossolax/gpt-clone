@@ -1,7 +1,4 @@
-@keyframes blink-caret {
-  0%, 49.99% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
+
 
 :host {
 
@@ -49,10 +46,7 @@
     .content {
       width: 100%;
     }
-    .caret {
-      font-style: normal;
-      animation: blink-caret 1s step-end infinite;
-    }
+
   }
 
 }

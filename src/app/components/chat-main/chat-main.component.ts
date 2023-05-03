@@ -15,6 +15,7 @@ export class ChatMainComponent {
 
   log: ChatInput[] = [
     { role: "system", content: "You are a helpful assistant." },
+    { role: "user", content: "You can ask me anything about the project." },
   ];
 
   constructor(private http: HttpClient) { }

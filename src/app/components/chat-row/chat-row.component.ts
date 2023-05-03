@@ -20,10 +20,11 @@ export class ChatRowComponent implements OnInit {
 
   ngOnInit() {
     this.markdownService.renderer.code = (code: string, language: string) => {
+      let languages = this.highlightService.hljs?.listLanguages()!;
+      if ( language.length > 0 && languages?.includes(language) )
+        languages = [language];
 
-      const highlight = this.highlightService.hljs?.highlightAuto(code, this.highlightService.hljs?.listLanguages());
-      console.log(this.highlightService.hljs, highlight);
-
+      const highlight = this.highlightService.hljs?.highlightAuto(code, languages);
       return `<pre><code class="hljs language-${highlight?.language}">${highlight?.value}</code></pre>`;
     };
   }

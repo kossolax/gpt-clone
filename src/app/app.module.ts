@@ -37,6 +37,13 @@ import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
           javascript: () => import('highlight.js/lib/languages/javascript'),
           typescript: () => import('highlight.js/lib/languages/typescript'),
           css: () => import('highlight.js/lib/languages/css'),
+          php: () => import('highlight.js/lib/languages/php'),
+          sql: () => import('highlight.js/lib/languages/sql'),
+          c: () => import('highlight.js/lib/languages/c'),
+          cpp: () => import('highlight.js/lib/languages/cpp'),
+          csharp: () => import('highlight.js/lib/languages/csharp'),
+          java: () => import('highlight.js/lib/languages/java'),
+          python: () => import('highlight.js/lib/languages/python'),
         }
       }
     }
