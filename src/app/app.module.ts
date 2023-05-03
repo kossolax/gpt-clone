@@ -10,6 +10,8 @@ import { ChatHistoryComponent } from './components/chat-history/chat-history.com
 import { AutosizeModule } from 'ngx-autosize';
 import { FormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
+import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
+
 
 @NgModule({
   declarations: [
@@ -24,9 +26,21 @@ import { MarkdownModule } from 'ngx-markdown';
     AppRoutingModule,
     FormsModule,
     AutosizeModule,
-    MarkdownModule.forRoot()
+    MarkdownModule.forRoot(),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: {
+        coreLibraryLoader: () => import('highlight.js/lib/core'),
+        languages: {
+          javascript: () => import('highlight.js/lib/languages/javascript'),
+          typescript: () => import('highlight.js/lib/languages/typescript'),
+          css: () => import('highlight.js/lib/languages/css'),
+        }
+      }
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
