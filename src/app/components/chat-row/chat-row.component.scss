@@ -47,6 +47,12 @@
       width: 100%;
     }
 
+    markdown.writing:empty:after,
+    markdown.writing::ng-deep >:last-child::after {
+      content: '█';
+      display: inline;
+      font-style: normal;
+    }
   }
 
 }

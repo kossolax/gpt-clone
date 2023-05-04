@@ -17,7 +17,6 @@ export class ChatMainComponent implements OnInit, OnDestroy {
 
   log: ChatInput[] = [
     { role: "system", content: "You are a helpful assistant." },
-    { role: "user", content: "You can ask me anything about the project." },
   ];
 
   constructor(private http: HttpClient) {
@@ -25,10 +24,9 @@ export class ChatMainComponent implements OnInit, OnDestroy {
 
   private onDestroy$: Subject<void> = new Subject<void>();
   public ngOnInit(): void {
-
     timer(1000, 60 * 1000).pipe(
       takeUntil(this.onDestroy$),
-      map(() => this.http.get(`${environment.api}/keepalive`).subscribe()),
+      map(() => this.http.get(`${environment.api}/keepalive`)),
     ).subscribe();
   }
   public ngOnDestroy(): void {

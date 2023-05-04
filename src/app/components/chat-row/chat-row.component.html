@@ -7,7 +7,7 @@
     </figure>
 
     <span class="content">
-      <markdown data="{{message.content}}" ngPreserveWhitespaces [ngClass]="message.role == 'assistant' && writing ? 'writing' : ''"></markdown>
+      <markdown data="{{message.content}}" ngPreserveWhitespaces [ngClass]="message.role == 'assistant' && showCarret ? 'writing' : ''"></markdown>
     </span>
   </div>
 </div>
