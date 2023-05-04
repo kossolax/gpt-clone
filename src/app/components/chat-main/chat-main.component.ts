@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient, HttpRequest, HttpEventType, HttpDownloadProgressEvent, HttpHeaders } from '@angular/common/http';
 import { ChatInput } from 'src/app/classes/chat';
+import { Subject, map, takeUntil, timer } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -9,7 +11,7 @@ import { ChatInput } from 'src/app/classes/chat';
   styleUrls: ['./chat-main.component.scss']
 })
 
-export class ChatMainComponent {
+export class ChatMainComponent implements OnInit, OnDestroy {
   message: string = '';
   writing: boolean = false;
 
@@ -18,7 +20,21 @@ export class ChatMainComponent {
     { role: "user", content: "You can ask me anything about the project." },
   ];
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
+
+  private onDestroy$: Subject<void> = new Subject<void>();
+  public ngOnInit(): void {
+
+    timer(1000, 60 * 1000).pipe(
+      takeUntil(this.onDestroy$),
+      map(() => this.http.get(`${environment.api}/keepalive`).subscribe()),
+    ).subscribe();
+  }
+  public ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
+  }
 
   onEnterPress(event: Event) {
     const message = this.message.trim();
@@ -27,7 +43,7 @@ export class ChatMainComponent {
       this.message = "";
       this.writing = true;
 
-      const req = new HttpRequest('POST', "https://gptclone9ud9teaw-frontend.functions.fnc.fr-par.scw.cloud/api/chat", this.log, {
+      const req = new HttpRequest('POST', `${environment.api}/chat`, this.log, {
         reportProgress: true,
         responseType: 'text'
       });
