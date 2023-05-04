@@ -16,7 +16,7 @@ export class ChatMainComponent implements OnInit, OnDestroy {
   writing: boolean = false;
 
   log: ChatInput[] = [
-    { role: "system", content: "You are a helpful assistant." },
+    { role: "system", content: "Répond comme si tu étais un homme." },
   ];
 
   constructor(private http: HttpClient) {

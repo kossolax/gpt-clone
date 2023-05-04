@@ -24,7 +24,8 @@
       .input {
         display: flex;
         align-self: center;
-        position: relative;
+        position: sticky;
+        bottom: 16px;
         padding: 12px 16px 12px 16px;
         margin: 16px;
         width: 100%;
