@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient, HttpRequest, HttpEventType, HttpDownloadProgressEvent, HttpHeaders } from '@angular/common/http';
-import { ChatInput } from 'src/app/classes/chat';
-import { Subject, map, takeUntil, timer } from 'rxjs';
+import { ChatInput, ChatHistory } from 'src/app/classes/chat';
+import { Subject, map, switchMap, takeUntil, timer } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 
@@ -14,10 +14,7 @@ import { environment } from 'src/environments/environment';
 export class ChatMainComponent implements OnInit, OnDestroy {
   message: string = '';
   writing: boolean = false;
-
-  log: ChatInput[] = [
-    { role: "system", content: "Répond comme si tu étais un homme." },
-  ];
+  chat: ChatHistory = new ChatHistory();
 
   constructor(private http: HttpClient) {
   }
@@ -26,7 +23,7 @@ export class ChatMainComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     timer(1000, 60 * 1000).pipe(
       takeUntil(this.onDestroy$),
-      map(() => this.http.get(`${environment.api}/keepalive`)),
+      switchMap(() => this.http.get(`${environment.api}/keepalive`)),
     ).subscribe();
   }
   public ngOnDestroy(): void {
@@ -37,11 +34,11 @@ export class ChatMainComponent implements OnInit, OnDestroy {
   onEnterPress(event: Event) {
     const message = this.message.trim();
     if( message.length > 0 && !this.writing ) {
-      this.log.push({role: "user", content: message});
+      this.chat.addMessage({role: "user", content: message});
       this.message = "";
       this.writing = true;
 
-      const req = new HttpRequest('POST', `${environment.api}/chat`, this.log, {
+      const req = new HttpRequest('POST', `${environment.api}/chat`, this.chat.log, {
         reportProgress: true,
         responseType: 'text'
       });
@@ -49,10 +46,10 @@ export class ChatMainComponent implements OnInit, OnDestroy {
       this.http.request<string>(req).subscribe(
         event => {
           if ( event.type == HttpEventType.Sent )
-            this.log.push({role: "assistant", content: ""});
+            this.chat.addMessage({role: "assistant", content: ""});
 
           if ( event.type == HttpEventType.DownloadProgress )
-            this.log[this.log.length-1].content = (event as HttpDownloadProgressEvent).partialText as string;
+            this.chat.log[this.chat.log.length-1].content = (event as HttpDownloadProgressEvent).partialText as string;
 
           if ( event.type == HttpEventType.Response )
             this.writing = false;
