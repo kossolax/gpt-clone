@@ -11,6 +11,7 @@ import { AutosizeModule } from 'ngx-autosize';
 import { FormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
 import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
+import { ChatInputComponent } from './components/chat-input/chat-input.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
     AppComponent,
     ChatMainComponent,
     ChatRowComponent,
-    ChatHistoryComponent
+    ChatHistoryComponent,
+    ChatInputComponent
   ],
   imports: [
     BrowserModule,

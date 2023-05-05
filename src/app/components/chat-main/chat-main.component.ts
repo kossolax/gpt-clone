@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient, HttpRequest, HttpEventType, HttpDownloadProgressEvent, HttpHeaders } from '@angular/common/http';
 import { ChatInput, ChatHistory } from 'src/app/classes/chat';
-import { Subject, map, switchMap, takeUntil, timer } from 'rxjs';
+import { Subject, catchError, map, switchMap, takeUntil, timer } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 
@@ -17,6 +17,10 @@ export class ChatMainComponent implements OnInit, OnDestroy {
   chat: ChatHistory = new ChatHistory();
 
   constructor(private http: HttpClient) {
+    this.chat.addMessage({role: "system", content: "You are an helpfull assistant."});
+    this.chat.addMessage({role: "user", content: "Hello, how are you?"});
+    this.chat.addMessage({role: "assistant", content: "I'm fine, thank you."});
+    this.chat.addMessage({role: "user", content: "I'm glad to hear that."});
   }
 
   private onDestroy$: Subject<void> = new Subject<void>();
@@ -24,6 +28,7 @@ export class ChatMainComponent implements OnInit, OnDestroy {
     timer(1000, 60 * 1000).pipe(
       takeUntil(this.onDestroy$),
       switchMap(() => this.http.get(`${environment.api}/keepalive`)),
+      catchError( () => { return [] })
     ).subscribe();
   }
   public ngOnDestroy(): void {
@@ -31,35 +36,31 @@ export class ChatMainComponent implements OnInit, OnDestroy {
     this.onDestroy$.complete();
   }
 
-  onEnterPress(event: Event) {
-    const message = this.message.trim();
-    if( message.length > 0 && !this.writing ) {
-      this.chat.addMessage({role: "user", content: message});
-      this.message = "";
-      this.writing = true;
+  onEnterPress(message: string) {
+    this.chat.addMessage({role: "user", content: message});
+    this.message = "";
+    this.writing = true;
 
-      const req = new HttpRequest('POST', `${environment.api}/chat`, this.chat.log, {
-        reportProgress: true,
-        responseType: 'text'
-      });
+    const req = new HttpRequest('POST', `${environment.api}/chat`, this.chat.log, {
+      reportProgress: true,
+      responseType: 'text'
+    });
 
-      this.http.request<string>(req).subscribe(
-        event => {
-          if ( event.type == HttpEventType.Sent )
-            this.chat.addMessage({role: "assistant", content: ""});
+    this.http.request<string>(req).subscribe(
+      event => {
+        if ( event.type == HttpEventType.Sent )
+          this.chat.addMessage({role: "assistant", content: ""});
 
-          if ( event.type == HttpEventType.DownloadProgress )
-            this.chat.log[this.chat.log.length-1].content = (event as HttpDownloadProgressEvent).partialText as string;
+        if ( event.type == HttpEventType.DownloadProgress )
+          this.chat.log[this.chat.log.length-1].content = (event as HttpDownloadProgressEvent).partialText as string;
 
-          if ( event.type == HttpEventType.Response )
-            this.writing = false;
-        },
-        error => {
+        if ( event.type == HttpEventType.Response )
           this.writing = false;
-        }
-      );
-    }
+      },
+      error => {
+        this.writing = false;
+      }
+    );
 
-    return false;
   }
 }
