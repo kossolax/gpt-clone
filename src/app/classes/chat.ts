@@ -28,6 +28,13 @@ export class ChatHistory {
     return this.branches[this.currentBranchIndex].log;
   }
 
+  get branchIndex(): number {
+    return this.currentBranchIndex;
+  }
+  get branchCount(): number {
+    return this.branches.length;
+  }
+
   addMessage(message: ChatInput): void {
     this.branches[this.currentBranchIndex].log.push(message);
   }
@@ -81,7 +88,4 @@ export class ChatHistory {
     }
   }
 
-  get branchIndex(): number {
-    return this.currentBranchIndex;
-  }
 }

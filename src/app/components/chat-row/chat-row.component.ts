@@ -11,7 +11,9 @@ import { Subscription, interval } from 'rxjs';
 })
 export class ChatRowComponent implements OnInit, OnChanges {
   @Input() message!: ChatInput;
-  @Input() writing!: boolean;
+  @Input() writing = false;
+  @Input() branchIndex = 0;
+  @Input() branchCount = 0;
 
   @Output() messageUpdate = new EventEmitter<string>();
   @Output() prev = new EventEmitter<number>();
@@ -59,7 +61,7 @@ export class ChatRowComponent implements OnInit, OnChanges {
   }
 
   onUpdate() {
-    const message = this.message.content + " " + Math.random().toString(36).substring(7);
+    const message = this.message.content;
     this.messageUpdate.emit(message);
   }
 

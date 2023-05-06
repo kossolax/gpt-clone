@@ -16,18 +16,6 @@
   }
 
 
-
-  button {
-    display: none;
-  }
-  .user button {
-    display: block;
-  }
-  :hover {
-    button {
-      display: block;
-    }
-  }
   button {
     background-color: transparent;
     color: rgb(172, 172, 190);
@@ -44,6 +32,10 @@
       color: rgb(64, 65, 79);
     }
   }
+  span {
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+  }
 
   .short {
     display: flex;
@@ -55,7 +47,12 @@
     .navigation, .rating {
       display: flex;
       flex-direction: row;
+      max-width: 4rem;
+      width: 100%;
+      visibility: hidden;
     }
+
+
 
     .content {
       display: flex;
@@ -97,6 +94,8 @@
 
   }
 
-
+  &:hover .navigation, &:hover .rating {
+    visibility: visible !important;
+  }
 
 }
