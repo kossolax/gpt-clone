@@ -7,8 +7,8 @@
         [message]="message"
         [writing]="message.role === 'assistant' && i === chat.log.length - 1 && writing"
         (messageUpdate)="onMessageUpdate($event, i)"
-        (next)="chat.next(i)"
-        (prev)="chat.previous(i)"
+        (next)="onMessageNext(i)"
+        (prev)="onMessagePrevious(i)"
       ></app-chat-row>
     </ng-container>
 

@@ -18,6 +18,7 @@ export class ChatMainComponent implements OnInit, OnDestroy {
 
   constructor(private http: HttpClient) {
     this.chat.addMessage({role: "system", content: "You are an helpfull assistant."});
+    this.chat.addMessage({role: "assistant", content: "Hello, how can I help you?"});
   }
 
   private onDestroy$: Subject<void> = new Subject<void>();
@@ -34,9 +35,21 @@ export class ChatMainComponent implements OnInit, OnDestroy {
   }
 
   onMessageUpdate(message: string, messageIndex: number) {
-    this.chat.fork(messageIndex);
-    this.chat.log[ messageIndex ].content = message;
-    this.query();
+    if( !this.writing ) {
+      this.chat.fork(messageIndex);
+      this.chat.log[ messageIndex ].content = message;
+      this.query();
+    }
+  }
+  onMessagePrevious(messageIndex: number) {
+    if( !this.writing ) {
+      this.chat.previous(messageIndex);
+    }
+  }
+  onMessageNext(messageIndex: number) {
+    if( !this.writing ) {
+      this.chat.next(messageIndex);
+    }
   }
 
   onEnterPress(message: string) {
