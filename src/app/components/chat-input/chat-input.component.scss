@@ -28,11 +28,21 @@
 
   }
 
-  .button {
+  .button, .loading {
     position: absolute;
-    right: 16px;
-    top: 16px;
+    right: 1rem;
+    top: 1rem;
     color: rgb(142, 142, 142);
-    cursor: pointer;
+    &.button {
+      cursor: pointer;
+    }
+    &.loading {
+      cursor: default;
+      font-size: 2rem;
+      line-height: 1rem;
+    }
+  }
+  .hidden {
+    visibility: hidden;
   }
 }
