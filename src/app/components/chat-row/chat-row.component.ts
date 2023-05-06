@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ChatInput } from 'src/app/classes/chat';
 import { MarkdownService } from 'ngx-markdown';
 import { HighlightJS } from 'ngx-highlightjs';
@@ -12,6 +12,11 @@ import { Subscription, interval } from 'rxjs';
 export class ChatRowComponent implements OnInit, OnChanges {
   @Input() message!: ChatInput;
   @Input() writing!: boolean;
+
+  @Output() messageUpdate = new EventEmitter<string>();
+  @Output() prev = new EventEmitter<number>();
+  @Output() next = new EventEmitter<number>();
+
   showCarret: boolean = false;
 
   constructor(
@@ -44,7 +49,6 @@ export class ChatRowComponent implements OnInit, OnChanges {
       return `<pre><code class="hljs language-${highlight?.language}">${highlight?.value}</code></pre>`;
     };
   }
-
   ngOnDestroy(): void {
     if( this.intervalSubscription ) this.intervalSubscription.unsubscribe();
   }
@@ -53,5 +57,11 @@ export class ChatRowComponent implements OnInit, OnChanges {
       this.startOrStopInterval();
     }
   }
+
+  onUpdate() {
+    const message = this.message.content + " " + Math.random().toString(36).substring(7);
+    this.messageUpdate.emit(message);
+  }
+
 
 }

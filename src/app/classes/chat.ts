@@ -5,22 +5,22 @@ export interface ChatInput {
 export interface Branch {
   log: ChatInput[];
 
-  forkedFromBranchIndex: number | null;
-  forkedAtMessageIndex : number | null;
-  forkedMessageCount: number[];
+  forkParentBranchIndex: number | null;
+  forkChildsBranchIndex: number[];
+}
+function deepCopy<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
 }
 
 export class ChatHistory {
   private branches: Branch[] = [];
   private currentBranchIndex: number = 0;
-  private currentMessageIndex: number = 0;
 
   constructor() {
     this.branches.push({
       log: [],
-      forkedFromBranchIndex: null,
-      forkedAtMessageIndex: null,
-      forkedMessageCount: [],
+      forkParentBranchIndex: 0,
+      forkChildsBranchIndex: [0],
     });
   }
 
@@ -30,49 +30,58 @@ export class ChatHistory {
 
   addMessage(message: ChatInput): void {
     this.branches[this.currentBranchIndex].log.push(message);
-    this.currentMessageIndex++;
   }
 
   fork(messageIndex: number): void {
-    const forkedFromBranchIndex = this.currentBranchIndex;
+    const currentBranchIndex = this.currentBranchIndex;
+    const currentBranch = this.branches[currentBranchIndex];
+    const branchToForkIndex = currentBranch.forkParentBranchIndex ?? this.currentBranchIndex;
+    const branchToFork = this.branches[branchToForkIndex];
+
     const newBranch: Branch = {
-      log: this.branches[forkedFromBranchIndex].log.slice(0, messageIndex + 1),
-      forkedFromBranchIndex,
-      forkedAtMessageIndex: messageIndex,
-      forkedMessageCount: [],
+      log: deepCopy<ChatInput[]>(currentBranch.log.slice(0, messageIndex + 1)),
+      forkParentBranchIndex: branchToForkIndex,
+      forkChildsBranchIndex: []
     };
+
     this.branches.push(newBranch);
     this.currentBranchIndex = this.branches.length - 1;
-    this.currentMessageIndex = messageIndex;
-
-    if (this.branches[forkedFromBranchIndex].forkedMessageCount[messageIndex] === undefined) {
-      this.branches[forkedFromBranchIndex].forkedMessageCount[messageIndex] = 1;
-    } else {
-      this.branches[forkedFromBranchIndex].forkedMessageCount[messageIndex]++;
-    }
+    newBranch.forkChildsBranchIndex.push(this.currentBranchIndex);
+    branchToFork.forkChildsBranchIndex.push(this.currentBranchIndex);
   }
 
   next(messageIndex: number): void {
-    const forkedCount = this.branches[this.currentBranchIndex].forkedMessageCount[messageIndex];
-    if (forkedCount && this.currentBranchIndex < this.branches.length - 1) {
-      this.currentBranchIndex++;
-      this.currentMessageIndex = messageIndex;
+    console.log(this);
+    const currentBranch = this.branches[this.currentBranchIndex];
+    if (currentBranch.forkParentBranchIndex !== null) {
+      const parentBranch = this.branches[currentBranch.forkParentBranchIndex];
+      const nextChildBranchIndexes = parentBranch.forkChildsBranchIndex.filter(
+        (childIndex) => childIndex > this.currentBranchIndex
+      );
+      console.log(nextChildBranchIndexes);
+
+      if (nextChildBranchIndexes.length > 0 ) {
+        this.currentBranchIndex = nextChildBranchIndexes[0];
+      }
     }
   }
 
   previous(messageIndex: number): void {
-    const forkedFromBranchIndex = this.branches[this.currentBranchIndex].forkedFromBranchIndex;
-    if (forkedFromBranchIndex !== null) {
-      this.currentBranchIndex = forkedFromBranchIndex;
-      this.currentMessageIndex = messageIndex;
+    const currentBranch = this.branches[this.currentBranchIndex];
+    if (currentBranch.forkParentBranchIndex !== null) {
+      const parentBranch = this.branches[currentBranch.forkParentBranchIndex];
+      const nextChildBranchIndexes = parentBranch.forkChildsBranchIndex.filter(
+        (childIndex) => childIndex < this.currentBranchIndex
+      );
+      console.log(nextChildBranchIndexes);
+
+      if (nextChildBranchIndexes.length > 0 ) {
+        this.currentBranchIndex = nextChildBranchIndexes[ nextChildBranchIndexes.length - 1];
+      }
     }
   }
 
-  getCurrentBranchIndex(): number {
+  get branchIndex(): number {
     return this.currentBranchIndex;
-  }
-
-  getCurrentMessageIndex(): number {
-    return this.currentMessageIndex;
   }
 }
