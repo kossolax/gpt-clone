@@ -10,6 +10,7 @@ interface Node {
 }
 
 export class ChatHistory {
+  private root: Node|null = null;
   private currentBranch: Node|null = null;
 
   get log(): ChatInput[] {
@@ -30,7 +31,6 @@ export class ChatHistory {
     }
     return nodes;
   }
-
 
   branchIndex(messageIndex: number): number {
     const currentNode = this.nodes[messageIndex];
@@ -61,6 +61,7 @@ export class ChatHistory {
         parent: null,
         children: []
       };
+      this.root = this.currentBranch;
     }
     else {
       const newNode: Node = {
@@ -116,7 +117,6 @@ export class ChatHistory {
     this.currentBranch = bottomNode;
   }
 
-
   previous(messageIndex: number): void {
     const currentNode = this.nodes[messageIndex];
 
@@ -138,4 +138,29 @@ export class ChatHistory {
     this.currentBranch = bottomNode;
   }
 
+  serialize(): string {
+    return JSON.stringify(this.root, (key: string, value: any) => {
+      if (key === 'parent')
+        return undefined;
+      return value;
+    });
+  }
+  deserialize(serialized: string): void {
+    function restoreParents(node: Node, parent: Node | null): void {
+      node.parent = parent;
+
+      for (const child of node.children)
+        restoreParents(child, node);
+    }
+
+    this.root = JSON.parse(serialized);
+    if (this.root) {
+      restoreParents(this.root, null);
+
+      this.currentBranch = this.root;
+      while (this.currentBranch.children.length > 0)
+        this.currentBranch = this.currentBranch.children[0];
+      }
+
+  }
 }
