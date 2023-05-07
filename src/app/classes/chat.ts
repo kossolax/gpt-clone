@@ -2,90 +2,140 @@ export interface ChatInput {
   role: "system" | "user" | "assistant";
   content: string;
 }
-export interface Branch {
-  log: ChatInput[];
+interface Node {
+  log: ChatInput;
 
-  forkParentBranchIndex: number | null;
-  forkChildsBranchIndex: number[];
-}
-function deepCopy<T>(obj: T): T {
-  return JSON.parse(JSON.stringify(obj));
+  parent: Node|null;
+  children: Node[];
 }
 
 export class ChatHistory {
-  private branches: Branch[] = [];
-  private currentBranchIndex: number = 0;
-
-  constructor() {
-    this.branches.push({
-      log: [],
-      forkParentBranchIndex: 0,
-      forkChildsBranchIndex: [0],
-    });
-  }
+  private currentBranch: Node|null = null;
 
   get log(): ChatInput[] {
-    return this.branches[this.currentBranchIndex].log;
+    const log: ChatInput[] = [];
+    let node: Node|null = this.currentBranch;
+    while( node !== null ) {
+      log.unshift( node.log );
+      node = node.parent;
+    }
+    return log;
+  }
+  get nodes(): Node[] {
+    const nodes: Node[] = [];
+    let node: Node|null = this.currentBranch;
+    while( node !== null ) {
+      nodes.unshift( node );
+      node = node.parent;
+    }
+    return nodes;
   }
 
-  get branchIndex(): number {
-    return this.currentBranchIndex;
+
+  branchIndex(messageIndex: number): number {
+    const currentNode = this.nodes[messageIndex];
+
+    if (currentNode.parent === null)
+      return 0;
+
+    const siblings = currentNode.parent.children;
+    const currentNodeIndex = siblings.indexOf(currentNode);
+
+    return currentNodeIndex;
   }
-  get branchCount(): number {
-    return this.branches.length;
+
+  branchCount(messageIndex: number): number {
+    const currentNode = this.nodes[messageIndex];
+
+    if (currentNode.parent === null)
+      return 0;
+
+    const siblings = currentNode.parent.children;
+    return siblings.length;
   }
 
   addMessage(message: ChatInput): void {
-    this.branches[this.currentBranchIndex].log.push(message);
+    if( this.currentBranch === null ) {
+      this.currentBranch = {
+        log: message,
+        parent: null,
+        children: []
+      };
+    }
+    else {
+      const newNode: Node = {
+        log: message,
+        parent: this.currentBranch,
+        children: []
+      };
+
+      this.currentBranch.children.push(newNode);
+      this.currentBranch = newNode;
+    }
+
   }
 
   fork(messageIndex: number): void {
-    const currentBranchIndex = this.currentBranchIndex;
-    const currentBranch = this.branches[currentBranchIndex];
-    const branchToForkIndex = currentBranch.forkParentBranchIndex ?? this.currentBranchIndex;
-    const branchToFork = this.branches[branchToForkIndex];
+    const currentNode = this.nodes[messageIndex];
 
-    const newBranch: Branch = {
-      log: deepCopy<ChatInput[]>(currentBranch.log.slice(0, messageIndex + 1)),
-      forkParentBranchIndex: branchToForkIndex,
-      forkChildsBranchIndex: []
+    if (currentNode.parent === null)
+      throw new Error("Root node has no siblings.");
+
+    const siblings = currentNode.parent.children;
+    const newNode = {
+      log: {
+        role: currentNode.log.role,
+        content: currentNode.log.content
+      },
+      parent: currentNode.parent,
+      children: []
     };
-
-    this.branches.push(newBranch);
-    this.currentBranchIndex = this.branches.length - 1;
-    newBranch.forkChildsBranchIndex.push(this.currentBranchIndex);
-    branchToFork.forkChildsBranchIndex.push(this.currentBranchIndex);
+    siblings.push(newNode);
+    this.currentBranch = newNode;
   }
 
   next(messageIndex: number): void {
-    console.log(this);
-    const currentBranch = this.branches[this.currentBranchIndex];
-    if (currentBranch.forkParentBranchIndex !== null) {
-      const parentBranch = this.branches[currentBranch.forkParentBranchIndex];
-      const nextChildBranchIndexes = parentBranch.forkChildsBranchIndex.filter(
-        (childIndex) => childIndex > this.currentBranchIndex
-      );
-      console.log(nextChildBranchIndexes);
+    const currentNode = this.nodes[messageIndex];
 
-      if (nextChildBranchIndexes.length > 0 ) {
-        this.currentBranchIndex = nextChildBranchIndexes[0];
-      }
+    if (currentNode.parent === null)
+      throw new Error("Root node has no siblings.");
+
+    const siblings = currentNode.parent.children;
+    const currentNodeIndex = siblings.indexOf(currentNode);
+
+    if (currentNodeIndex === siblings.length - 1)
+      throw new Error("Current node is the last sibling. No next sibling available.");
+
+    const nextSibling = siblings[currentNodeIndex + 1];
+
+    let bottomNode = nextSibling;
+    while (bottomNode.children.length > 0) {
+      bottomNode = bottomNode.children[0];
     }
+
+    this.currentBranch = bottomNode;
   }
 
-  previous(messageIndex: number): void {
-    const currentBranch = this.branches[this.currentBranchIndex];
-    if (currentBranch.forkParentBranchIndex !== null) {
-      const parentBranch = this.branches[currentBranch.forkParentBranchIndex];
-      const nextChildBranchIndexes = parentBranch.forkChildsBranchIndex.filter(
-        (childIndex) => childIndex < this.currentBranchIndex
-      );
-      console.log(nextChildBranchIndexes);
 
-      if (nextChildBranchIndexes.length > 0 ) {
-        this.currentBranchIndex = nextChildBranchIndexes[ nextChildBranchIndexes.length - 1];
-      }
+  previous(messageIndex: number): void {
+    const currentNode = this.nodes[messageIndex];
+
+    if (currentNode.parent === null)
+      throw new Error("Root node has no siblings.");
+
+    const siblings = currentNode.parent.children;
+    const currentNodeIndex = siblings.indexOf(currentNode);
+
+    if (currentNodeIndex === 0)
+      throw new Error("Current node is the first sibling. No previous sibling available.");
+
+    const previousSibling = siblings[currentNodeIndex - 1];
+    let bottomNode = previousSibling;
+    while (bottomNode.children.length > 0) {
+      bottomNode = bottomNode.children[bottomNode.children.length - 1];
     }
+
+    this.currentBranch = bottomNode;
   }
 
 }

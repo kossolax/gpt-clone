@@ -6,8 +6,8 @@
       <app-chat-row
         [message]="message"
         [writing]="message.role === 'assistant' && i === chat.log.length - 1 && writing"
-        [branchIndex]="chat.branchIndex"
-        [branchCount]="chat.branchCount"
+        [branchIndex]="chat.branchIndex(i)"
+        [branchCount]="chat.branchCount(i)"
         (messageUpdate)="onMessageUpdate($event, i)"
         (next)="onMessageNext(i)"
         (prev)="onMessagePrevious(i)"
