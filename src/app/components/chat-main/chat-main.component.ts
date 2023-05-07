@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpClient, HttpRequest, HttpEventType, HttpDownloadProgressEvent, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEventType, HttpDownloadProgressEvent, HttpHeaders, HttpEvent, HttpResponse } from '@angular/common/http';
 import { ChatInput, ChatHistory } from 'src/app/classes/chat';
-import { Subject, catchError, map, switchMap, takeUntil, timer } from 'rxjs';
+import { Subject, catchError, map, switchMap, takeUntil, tap, timer } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { HistoryService } from 'src/app/services/history.service';
 
 
 @Component({
@@ -14,19 +15,26 @@ import { environment } from 'src/environments/environment';
 export class ChatMainComponent implements OnInit, OnDestroy {
   message: string = '';
   writing: boolean = false;
-  chat: ChatHistory = new ChatHistory();
+  chat: ChatHistory;
 
-  constructor(private http: HttpClient) {
-    this.chat.addMessage({role: "system", content: "You are an helpfull assistant."});
-    this.chat.addMessage({role: "assistant", content: "Hello, how can I help you?"});
+  constructor(private http: HttpClient, private history: HistoryService) {
+    const oldChats = this.history.history;
+    if( oldChats.length > 0 ) {
+      this.chat = oldChats[ oldChats.length - 1 ];
+    }
+    else {
+      this.chat = new ChatHistory();
+      this.chat.addMessage({role: "system", content: "You are an helpfull assistant."});
+      this.chat.addMessage({role: "assistant", content: "Hello, how can I help you?"});
+      this.history.addHistory(this.chat);
+    }
   }
 
   private onDestroy$: Subject<void> = new Subject<void>();
   public ngOnInit(): void {
-    timer(1000, 60 * 1000).pipe(
+    timer(1000, 1000).pipe(
       takeUntil(this.onDestroy$),
-      switchMap(() => this.http.get(`${environment.api}/keepalive`)),
-      catchError( () => { return [] })
+      switchMap(() => this.http.get(`${environment.api}/keepalive`) ),
     ).subscribe();
   }
   public ngOnDestroy(): void {
@@ -38,7 +46,7 @@ export class ChatMainComponent implements OnInit, OnDestroy {
     if( !this.writing ) {
       this.chat.fork(messageIndex);
       this.chat.log[ messageIndex ].content = message;
-      this.query();
+      this.generateAnwser();
     }
   }
   onMessagePrevious(messageIndex: number) {
@@ -56,13 +64,15 @@ export class ChatMainComponent implements OnInit, OnDestroy {
     this.chat.addMessage({role: "user", content: message});
     this.message = "";
 
-    this.query();
+    this.history.save();
+    this.generateAnwser();
+    if( this.chat.title === null )
+      this.generateTitle(message);
   }
 
-  query() {
+  generateAnwser() {
 
     this.writing = true;
-
     const req = new HttpRequest('POST', `${environment.api}/chat`, this.chat.log, {
       reportProgress: true,
       responseType: 'text'
@@ -76,12 +86,45 @@ export class ChatMainComponent implements OnInit, OnDestroy {
         if ( event.type == HttpEventType.DownloadProgress )
           this.chat.log[this.chat.log.length-1].content = (event as HttpDownloadProgressEvent).partialText as string;
 
-        if ( event.type == HttpEventType.Response )
+        if ( event.type == HttpEventType.Response ) {
           this.writing = false;
+          this.history.save();
+        }
       },
       error => {
         this.writing = false;
       }
+    );
+  }
+  generateTitle(message: string) {
+    const log: ChatInput[] = [];
+    let prompt = "Generate a summary for the following conversation between a user and their assistant. ";
+    prompt += "Only anwser with the summary of the conversation, do not add any other text. ";
+    prompt += "The summary must be no longer than 4 words and 16 tokens, in the same language as the conversation, and relevant to the content. ";
+    prompt += "If the conversation is task-related, summarize the task. ";
+    prompt += "If it's casual, summarize the topic. ";
+    prompt += "For greetings, summarize the greeting in a imaginative way. ";
+    prompt += "If the input consists of unrecognized words or characters, answer 'Random string conversation'. ";
+    prompt += "If you cannot determine a summary, answer 'New chat'.";
+
+
+    log.push({role: "system", content: prompt});
+    log.push({role: "user", content: message});
+
+    const req = new HttpRequest('POST', `${environment.api}/chat`, log, {
+      reportProgress: true,
+      responseType: 'text'
+    });
+
+    this.http.request<string>(req).subscribe(
+      event => {
+        if ( event.type == HttpEventType.Response ) {
+          if( event.body && event.body.length > 1 ) {
+            this.chat.title = event.body;
+            this.history.save();
+          }
+        }
+      },
     );
   }
 }

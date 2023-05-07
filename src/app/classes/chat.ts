@@ -10,8 +10,14 @@ interface Node {
 }
 
 export class ChatHistory {
+  title: string|null = null;
+  date: Date|null = null;
   private root: Node|null = null;
   private currentBranch: Node|null = null;
+
+  constructor() {
+    this.date = new Date();
+  }
 
   get log(): ChatInput[] {
     const log: ChatInput[] = [];
@@ -139,13 +145,13 @@ export class ChatHistory {
   }
 
   serialize(): string {
-    return JSON.stringify(this.root, (key: string, value: any) => {
+    return JSON.stringify(this, (key: string, value: any) => {
       if (key === 'parent')
         return undefined;
       return value;
     });
   }
-  deserialize(serialized: string): void {
+  static deserialize(serialized: string): ChatHistory {
     function restoreParents(node: Node, parent: Node | null): void {
       node.parent = parent;
 
@@ -153,14 +159,20 @@ export class ChatHistory {
         restoreParents(child, node);
     }
 
-    this.root = JSON.parse(serialized);
-    if (this.root) {
-      restoreParents(this.root, null);
+    const history = new ChatHistory();
+    const json = JSON.parse(serialized);
+    history.title = json.title;
+    history.date = new Date(json.date);
+    history.root = json.root;
 
-      this.currentBranch = this.root;
-      while (this.currentBranch.children.length > 0)
-        this.currentBranch = this.currentBranch.children[0];
-      }
+    if (history.root) {
+      restoreParents(history.root, null);
 
+      history.currentBranch = history.root;
+      while (history.currentBranch.children.length > 0)
+        history.currentBranch = history.currentBranch.children[0];
+    }
+
+    return history;
   }
 }

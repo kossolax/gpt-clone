@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ChatHistory } from 'src/app/classes/chat';
+import { HistoryService } from 'src/app/services/history.service';
 
 @Component({
   selector: 'app-chat-history',
@@ -7,4 +9,10 @@ import { Component } from '@angular/core';
 })
 export class ChatHistoryComponent {
 
+  constructor(private historyService: HistoryService) {
+
+  }
+  get history() {
+    return this.historyService.history;
+  }
 }
