@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { ChatHistory } from 'src/app/classes/chat';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { HistoryService } from 'src/app/services/history.service';
 
 @Component({
@@ -8,10 +7,11 @@ import { HistoryService } from 'src/app/services/history.service';
   styleUrls: ['./chat-history.component.scss']
 })
 export class ChatHistoryComponent {
+  @Output() onNewChat = new EventEmitter();
 
   constructor(private historyService: HistoryService) {
-
   }
+
   get history() {
     return this.historyService.history;
   }

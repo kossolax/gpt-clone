@@ -15,7 +15,7 @@ import { HistoryService } from 'src/app/services/history.service';
 export class ChatMainComponent implements OnInit, OnDestroy {
   message: string = '';
   writing: boolean = false;
-  chat: ChatHistory;
+  chat!: ChatHistory;
 
   constructor(private http: HttpClient, private history: HistoryService) {
     const oldChats = this.history.history;
@@ -23,10 +23,7 @@ export class ChatMainComponent implements OnInit, OnDestroy {
       this.chat = oldChats[ oldChats.length - 1 ];
     }
     else {
-      this.chat = new ChatHistory();
-      this.chat.addMessage({role: "system", content: "You are an helpfull assistant."});
-      this.chat.addMessage({role: "assistant", content: "Hello, how can I help you?"});
-      this.history.addHistory(this.chat);
+      this.onNewChat();
     }
   }
 
@@ -40,6 +37,15 @@ export class ChatMainComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this.onDestroy$.next();
     this.onDestroy$.complete();
+  }
+
+  onNewChat() {
+    if( !this.writing ) {
+      this.chat = new ChatHistory();
+      this.chat.addMessage({role: "system", content: "You are an helpfull assistant."});
+      this.chat.addMessage({role: "assistant", content: "Hello, how can I help you?"});
+      this.history.addHistory(this.chat);
+    }
   }
 
   onMessageUpdate(message: string, messageIndex: number) {
