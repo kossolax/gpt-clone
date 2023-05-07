@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient, HttpRequest, HttpEventType, HttpDownloadProgressEvent, HttpHeaders, HttpEvent, HttpResponse } from '@angular/common/http';
 import { ChatInput, ChatHistory } from 'src/app/classes/chat';
-import { Subject, catchError, map, switchMap, takeUntil, tap, timer } from 'rxjs';
+import { EMPTY, Subject, catchError, map, switchMap, takeUntil, tap, timer } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HistoryService } from 'src/app/services/history.service';
 
@@ -29,9 +29,9 @@ export class ChatMainComponent implements OnInit, OnDestroy {
 
   private onDestroy$: Subject<void> = new Subject<void>();
   public ngOnInit(): void {
-    timer(1000, 1000).pipe(
+    timer(1000, 60 * 1000).pipe(
       takeUntil(this.onDestroy$),
-      switchMap(() => this.http.get(`${environment.api}/keepalive`) ),
+      switchMap(() => this.http.get(`${environment.api}/keepalive`).pipe(catchError(() => EMPTY))),
     ).subscribe();
   }
   public ngOnDestroy(): void {
