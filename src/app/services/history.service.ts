@@ -11,9 +11,16 @@ export class HistoryService {
     this.load();
   }
 
-  addHistory(history: ChatHistory) {
-    this.history.push(history);
+  add(history: ChatHistory) {
+    this.history.unshift(history);
     this.save();
+  }
+  delete(history: ChatHistory) {
+    const index = this.history.indexOf(history);
+    if (index >= 0) {
+      this.history.splice(index, 1);
+      this.save();
+    }
   }
 
   save(): void {

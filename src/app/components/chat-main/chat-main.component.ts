@@ -22,9 +22,6 @@ export class ChatMainComponent implements OnInit, OnDestroy {
     if( oldChats.length > 0 ) {
       this.chat = oldChats[ oldChats.length - 1 ];
     }
-    else {
-      this.onNewChat();
-    }
   }
 
   private onDestroy$: Subject<void> = new Subject<void>();
@@ -39,12 +36,9 @@ export class ChatMainComponent implements OnInit, OnDestroy {
     this.onDestroy$.complete();
   }
 
-  onNewChat() {
+  onChatChange(chat: ChatHistory) {
     if( !this.writing ) {
-      this.chat = new ChatHistory();
-      this.chat.addMessage({role: "system", content: "You are an helpfull assistant."});
-      this.chat.addMessage({role: "assistant", content: "Hello, how can I help you?"});
-      this.history.addHistory(this.chat);
+      this.chat = chat;
     }
   }
 
