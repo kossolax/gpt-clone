@@ -10,7 +10,7 @@ import openai
 
 app = Flask(__name__)
 cors = CORS(app, origins=["http://localhost:4200"], expose_headers=["X-Auth-Token"])
-
+models = os.getenv("MODELS", "gpt-3.5-turbo").split(",")
 
 @app.route("/")
 def root():
@@ -21,6 +21,10 @@ def root():
 @app.route("/keepalive")
 def keepalive():
   return "Ok"
+
+@app.route("/models")
+def get_models():
+  return json.dumps(models)
 
 @app.route("/chat", methods = ['POST', 'GET'])
 def chat():
@@ -35,7 +39,7 @@ def chat():
     return "Error"
 
   def generate():
-    responses = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=prompt, temperature=0.9, top_p= 0.1, stream=True)
+    responses = openai.ChatCompletion.create(model=models[0], messages=prompt, temperature=0.9, top_p= 0.1, stream=True)
     for response in responses:
       if len(response.choices) > 0:
         try:
