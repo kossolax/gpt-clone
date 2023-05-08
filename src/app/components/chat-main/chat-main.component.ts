@@ -28,7 +28,7 @@ export class ChatMainComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     timer(1000, 60 * 1000).pipe(
       takeUntil(this.onDestroy$),
-      switchMap(() => this.http.get(`${environment.api}/keepalive`).pipe(catchError(() => EMPTY))),
+      switchMap(() => this.http.get(`${environment.api}/keepalive`,  {responseType: 'text'})),
     ).subscribe();
   }
   public ngOnDestroy(): void {
@@ -78,23 +78,20 @@ export class ChatMainComponent implements OnInit, OnDestroy {
       responseType: 'text'
     });
 
-    this.http.request<string>(req).subscribe(
-      event => {
+    this.http.request<string>(req).subscribe({
+      next: (event) => {
         if ( event.type == HttpEventType.Sent )
           this.chat.addMessage({role: "assistant", content: ""});
 
         if ( event.type == HttpEventType.DownloadProgress )
           this.chat.log[this.chat.log.length-1].content = (event as HttpDownloadProgressEvent).partialText as string;
 
-        if ( event.type == HttpEventType.Response ) {
-          this.writing = false;
+        if ( event.type == HttpEventType.Response )
           this.history.save();
-        }
       },
-      error => {
-        this.writing = false;
-      }
-    );
+      error: (e) => console.error(e),
+      complete: () =>  this.writing = false
+    });
   }
   generateTitle(message: string) {
     const log: ChatInput[] = [];
@@ -111,20 +108,11 @@ export class ChatMainComponent implements OnInit, OnDestroy {
     log.push({role: "system", content: prompt});
     log.push({role: "user", content: message});
 
-    const req = new HttpRequest('POST', `${environment.api}/chat`, log, {
-      reportProgress: true,
-      responseType: 'text'
+    this.http.post(`${environment.api}/chat`, log, {responseType: 'text'}).subscribe( data => {
+      if( data && data.length > 1 ) {
+        this.chat.title = data;
+        this.history.save();
+      }
     });
-
-    this.http.request<string>(req).subscribe(
-      event => {
-        if ( event.type == HttpEventType.Response ) {
-          if( event.body && event.body.length > 1 ) {
-            this.chat.title = event.body;
-            this.history.save();
-          }
-        }
-      },
-    );
   }
 }
