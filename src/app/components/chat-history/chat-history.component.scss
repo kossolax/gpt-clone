@@ -33,6 +33,46 @@
 
 
     }
+
+    ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+
+      li {
+        display: flex;
+
+        a {
+          display: flex;
+          flex-direction: row;
+          flex-grow: 1;
+          gap: 0.75rem;
+          padding: 0.75rem;
+          border-radius: 6px;
+
+          &:hover {
+            background-color: rgb(42, 43, 50);
+          }
+          &.current {
+            background-color: rgb(52, 53, 65);
+          }
+
+          svg {
+            flex-shrink: 0;
+            align-self: center;
+          }
+
+          div {
+            max-height: 1.5rem;
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
+          }
+
+        }
+      }
+    }
   }
 
 }

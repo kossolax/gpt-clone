@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ChatHistory } from 'src/app/classes/chat';
 import { HistoryService } from 'src/app/services/history.service';
 
@@ -8,6 +8,7 @@ import { HistoryService } from 'src/app/services/history.service';
   styleUrls: ['./chat-history.component.scss']
 })
 export class ChatHistoryComponent {
+  @Input() current:ChatHistory|null = null;
   @Output() onChatChange:EventEmitter<ChatHistory> = new EventEmitter<ChatHistory>();
 
   constructor(private historyService: HistoryService) {

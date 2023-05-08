@@ -1,4 +1,4 @@
-<app-chat-history (onChatChange)="onChatChange($event)"></app-chat-history>
+<app-chat-history (onChatChange)="onChatChange($event)" [current]="chat"></app-chat-history>
 <div class="chat">
 
   <div class="log">
@@ -17,6 +17,5 @@
     <div class="spacer"></div>
 
     <app-chat-input (message)="onEnterPress($event)" [locked]="writing"></app-chat-input>
-
 </div>
 </div>
