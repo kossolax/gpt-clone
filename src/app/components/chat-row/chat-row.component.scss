@@ -83,12 +83,7 @@
         width: 100%;
       }
 
-      markdown.writing:empty:after,
-      markdown.writing::ng-deep >:last-child::after {
-        content: '█';
-        display: inline;
-        font-style: normal;
-      }
+
     }
 
 
@@ -97,5 +92,35 @@
   &:hover .navigation, &:hover .rating {
     visibility: visible !important;
   }
+
+  markdown {
+    &.writing:empty:after,
+    &.writing::ng-deep >:last-child::after {
+      content: '█';
+      display: inline;
+      font-style: normal;
+    }
+
+    &::ng-deep {
+      .code {
+        display: block;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        background-color: rgb(52, 53, 65);
+        color: rgb(217, 217, 227);
+        .legend {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+        code {
+          white-space: pre;
+          display: block;
+          border-bottom-left-radius: 6px;
+          border-bottom-right-radius: 6px;
+        }
+      }
+    }
+  }
+
 
 }

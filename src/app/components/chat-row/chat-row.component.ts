@@ -9,6 +9,7 @@ import { Subscription, interval } from 'rxjs';
   templateUrl: './chat-row.component.html',
   styleUrls: ['./chat-row.component.scss']
 })
+
 export class ChatRowComponent implements OnInit, OnChanges {
   @Input() message!: ChatInput;
   @Input() writing = false;
@@ -23,8 +24,16 @@ export class ChatRowComponent implements OnInit, OnChanges {
 
   constructor(
     private markdownService: MarkdownService,
-    private highlightService: HighlightJS
+    public highlightService: HighlightJS
     ) {
+      this.markdownService.renderer.code = (code: string, language: string) => {
+        let languages = this.highlightService.hljs?.listLanguages()!;
+        if ( language.length > 0 && languages?.includes(language) )
+          languages = [language];
+
+        const highlight = this.highlightService.hljs?.highlightAuto(code, languages);
+        return `<div class="code"><span class="legend">${highlight?.language}</span><code class="hljs language-${highlight?.language}">${highlight?.value}</code></div>`;
+      };
   }
 
   private intervalSubscription: Subscription | undefined;
@@ -42,14 +51,6 @@ export class ChatRowComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.startOrStopInterval();
-    this.markdownService.renderer.code = (code: string, language: string) => {
-      let languages = this.highlightService.hljs?.listLanguages()!;
-      if ( language.length > 0 && languages?.includes(language) )
-        languages = [language];
-
-      const highlight = this.highlightService.hljs?.highlightAuto(code, languages);
-      return `<pre><code class="hljs language-${highlight?.language}">${highlight?.value}</code></pre>`;
-    };
   }
   ngOnDestroy(): void {
     if( this.intervalSubscription ) this.intervalSubscription.unsubscribe();

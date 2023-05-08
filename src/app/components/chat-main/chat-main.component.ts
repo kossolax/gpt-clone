@@ -20,7 +20,7 @@ export class ChatMainComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient, private history: HistoryService) {
     const oldChats = this.history.history;
     if( oldChats.length > 0 ) {
-      this.chat = oldChats[ oldChats.length - 1 ];
+      this.chat = oldChats[ 0 ];
     }
   }
 

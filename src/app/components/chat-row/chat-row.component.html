@@ -20,7 +20,7 @@
         <img *ngIf="message.role === 'user'" width="41" height="41" src="https://ui-avatars.com/api/?name=Steve+Zaretti" />
       </figure>
 
-      <div class="message">
+      <div class="message" *ngIf="highlightService.listLanguages() | async">
         <markdown *ngIf="message.role === 'assistant'" data="{{message.content}}" ngPreserveWhitespaces [ngClass]="showCarret ? 'writing' : ''"></markdown>
         <div *ngIf="message.role !== 'assistant'">{{message.content}}</div>
       </div>
