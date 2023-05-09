@@ -22,6 +22,8 @@ export class ChatRowComponent implements OnInit, OnChanges {
   @Output() next = new EventEmitter<number>();
 
   showCarret: boolean = false;
+  edit: boolean = false;
+  currentText: string = '';
   readonly clipboardButton = ClipboardButtonComponent;
 
   constructor(
@@ -66,10 +68,19 @@ export class ChatRowComponent implements OnInit, OnChanges {
     }
   }
 
-  onUpdate() {
-    const message = this.message.content;
-    this.messageUpdate.emit(message);
+  onEdit() {
+    this.currentText = this.message.content;
+    this.edit = true;
   }
+  onEnterPress(event: Event) {
+    const message = this.currentText.trim();
+    if( message.length > 0 ) {
+      this.messageUpdate.emit(message);
+      this.currentText = '';
+      this.edit = false;
+    }
 
+    return false;
+  }
 
 }
