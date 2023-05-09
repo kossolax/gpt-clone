@@ -21,7 +21,7 @@
       </figure>
 
       <div class="message" *ngIf="highlightService.listLanguages() | async">
-        <markdown *ngIf="message.role === 'assistant'" data="{{message.content}}" ngPreserveWhitespaces [ngClass]="showCarret ? 'writing' : ''"></markdown>
+        <markdown *ngIf="message.role === 'assistant'" data="{{message.content}}" ngPreserveWhitespaces clipboard [ngClass]="showCarret ? 'writing' : ''"></markdown>
         <div *ngIf="message.role !== 'assistant'">{{message.content}}</div>
       </div>
     </div>
