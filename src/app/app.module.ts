@@ -9,9 +9,11 @@ import { ChatRowComponent } from './components/chat-row/chat-row.component';
 import { ChatHistoryComponent } from './components/chat-history/chat-history.component';
 import { AutosizeModule } from 'ngx-autosize';
 import { FormsModule } from '@angular/forms';
-import { MarkdownModule } from 'ngx-markdown';
+import { ClipboardOptions, MarkdownModule } from 'ngx-markdown';
 import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { ChatInputComponent } from './components/chat-input/chat-input.component';
+import { ClipboardButtonComponent } from './components/clipboard/clipboard.component';
+import { CommonModule } from '@angular/common';
 
 
 @NgModule({
@@ -23,12 +25,20 @@ import { ChatInputComponent } from './components/chat-input/chat-input.component
     ChatInputComponent
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
     AutosizeModule,
-    MarkdownModule.forRoot(),
+    MarkdownModule.forRoot({
+      clipboardOptions: {
+        provide: ClipboardOptions,
+        useValue: {
+          buttonComponent: ClipboardButtonComponent,
+        },
+      },
+    }),
   ],
   providers: [
     {

@@ -105,7 +105,10 @@
     }
 
     &::ng-deep {
-      .markdown-clipboard-button {
+      .code~div {
+        opacity: 1 !important;
+        top: 0 !important;
+        right: 0 !important;
       }
       .code {
         display: block;

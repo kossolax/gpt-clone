@@ -3,6 +3,7 @@ import { ChatInput } from 'src/app/classes/chat';
 import { MarkdownService } from 'ngx-markdown';
 import { HighlightJS } from 'ngx-highlightjs';
 import { Subscription, interval } from 'rxjs';
+import { ClipboardButtonComponent } from '../clipboard/clipboard.component';
 
 @Component({
   selector: 'app-chat-row',
@@ -21,6 +22,7 @@ export class ChatRowComponent implements OnInit, OnChanges {
   @Output() next = new EventEmitter<number>();
 
   showCarret: boolean = false;
+  readonly clipboardButton = ClipboardButtonComponent;
 
   constructor(
     private markdownService: MarkdownService,

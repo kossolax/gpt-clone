@@ -1,0 +1,13 @@
+:host {
+  display: block;
+  padding: 8px 16px;
+  font-size: 0.75rem;
+  background-color: inherit;
+  border: 0;
+  color: rgb(217, 217, 227);
+  cursor: pointer;
+
+  span {
+    padding: 8px;
+  }
+}
