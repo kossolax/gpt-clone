@@ -38,8 +38,8 @@ export class ChatRowComponent implements OnInit, OnChanges {
         const highlight = this.highlightService.hljs?.highlightAuto(code, languages);
 
         const header = `<div class="legend"><span>${highlight?.language}</span></div>`;
-        const body = `<code class="hljs language-${highlight?.language}">${highlight?.value}</code>`;
-        return `<pre class="code">${header}${body}</pre>`;
+        const body = `<pre><code class="hljs language-${highlight?.language}">${highlight?.value}</code></pre>`;
+        return `<div class="code">${header}${body}</div>`;
       };
   }
 

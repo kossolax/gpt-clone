@@ -105,13 +105,17 @@
     }
 
     &::ng-deep {
-      .code~div {
+      pre~div {
         opacity: 1 !important;
         top: 0 !important;
         right: 0 !important;
       }
+      .code .legend~div {
+        position: unset !important;
+      }
       .code {
         display: block;
+        position: relative;
         border-radius: 6px;
         background-color: rgb(52, 53, 65);
         color: rgb(217, 217, 227);
