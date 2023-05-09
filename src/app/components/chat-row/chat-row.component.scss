@@ -81,6 +81,9 @@
       }
       .message {
         width: 100%;
+        &>div {
+          white-space: pre;
+        }
       }
 
 
