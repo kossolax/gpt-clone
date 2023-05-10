@@ -18,7 +18,7 @@ export class ChatMainComponent implements OnInit, OnDestroy {
   chat: ChatHistory|null = null;
 
   constructor(private http: HttpClient, private history: HistoryService) {
-    this.chat = this.history.first;
+    //this.chat = this.history.first;
   }
 
   private onDestroy$: Subject<void> = new Subject<void>();
