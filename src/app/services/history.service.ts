@@ -1,11 +1,39 @@
 import { Injectable } from '@angular/core';
 import { ChatHistory } from '../classes/chat';
+import * as dayjs from 'dayjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HistoryService {
-  history: ChatHistory[] = [];
+  private history: ChatHistory[] = [];
+
+  get historyRange(): {[key: string]: ChatHistory[]} {
+    const res: {[key: string]: ChatHistory[]} = {};
+    const now = dayjs();
+
+    for (const history of this.history) {
+      const date = dayjs(history.date);
+      const diff = now.diff(date, 'day');
+      let key: string;
+
+      if (diff <= 0) key = "Today";
+      else if (diff <= 1) key = "Yesterday";
+      else if (diff <= 7) key = "Last 7 Days";
+      else if (diff <= 30) key = "Last 30 Days";
+      else key = date.format('MMMM');
+
+      if (!res[key]) res[key] = [];
+      res[key].push(history);
+    }
+
+    return res;
+  }
+
+  get first(): ChatHistory|null {
+    if (this.history.length > 0) return this.history[0];
+    return null;
+  }
 
   constructor() {
     this.load();

@@ -7,15 +7,17 @@ import { HistoryService } from 'src/app/services/history.service';
   templateUrl: './chat-history.component.html',
   styleUrls: ['./chat-history.component.scss']
 })
+
 export class ChatHistoryComponent {
   @Input() current:ChatHistory|null = null;
   @Output() onChatChange:EventEmitter<ChatHistory> = new EventEmitter<ChatHistory>();
 
+
   constructor(private historyService: HistoryService) {
   }
 
-  get history() {
-    return this.historyService.history;
+  get historyRange() {
+    return this.historyService.historyRange;
   }
 
   create() {

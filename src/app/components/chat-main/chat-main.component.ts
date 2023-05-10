@@ -15,13 +15,10 @@ import { HistoryService } from 'src/app/services/history.service';
 export class ChatMainComponent implements OnInit, OnDestroy {
   message: string = '';
   writing: boolean = false;
-  chat!: ChatHistory;
+  chat: ChatHistory;
 
   constructor(private http: HttpClient, private history: HistoryService) {
-    const oldChats = this.history.history;
-    if( oldChats.length > 0 ) {
-      this.chat = oldChats[ 0 ];
-    }
+    this.chat = this.history.first!;
   }
 
   private onDestroy$: Subject<void> = new Subject<void>();
