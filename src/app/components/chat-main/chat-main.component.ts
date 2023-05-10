@@ -15,10 +15,10 @@ import { HistoryService } from 'src/app/services/history.service';
 export class ChatMainComponent implements OnInit, OnDestroy {
   message: string = '';
   writing: boolean = false;
-  chat: ChatHistory;
+  chat: ChatHistory|null = null;
 
   constructor(private http: HttpClient, private history: HistoryService) {
-    this.chat = this.history.first!;
+    this.chat = this.history.first;
   }
 
   private onDestroy$: Subject<void> = new Subject<void>();
@@ -40,24 +40,28 @@ export class ChatMainComponent implements OnInit, OnDestroy {
   }
 
   onMessageUpdate(message: string, messageIndex: number) {
-    if( !this.writing ) {
-      this.chat.fork(messageIndex);
-      this.chat.log[ messageIndex ].content = message;
-      this.generateAnwser();
-    }
+    if( !this.chat ) return;
+    if( this.writing ) return;
+
+    this.chat.fork(messageIndex);
+    this.chat.log[ messageIndex ].content = message;
+    this.generateAnwser();
   }
   onMessagePrevious(messageIndex: number) {
-    if( !this.writing ) {
-      this.chat.previous(messageIndex);
-    }
+    if( !this.chat ) return;
+    if( this.writing ) return;
+
+    this.chat.previous(messageIndex);
   }
   onMessageNext(messageIndex: number) {
-    if( !this.writing ) {
-      this.chat.next(messageIndex);
-    }
+    if( !this.chat ) return;
+    if( this.writing ) return;
+
+    this.chat.next(messageIndex);
   }
 
   onEnterPress(message: string) {
+    if( !this.chat ) return;
     this.chat.addMessage({role: "user", content: message});
     this.message = "";
 
@@ -68,6 +72,7 @@ export class ChatMainComponent implements OnInit, OnDestroy {
   }
 
   generateAnwser() {
+    if( !this.chat ) return;
 
     this.writing = true;
     const req = new HttpRequest('POST', `${environment.api}/chat`, this.chat.log, {
@@ -77,6 +82,8 @@ export class ChatMainComponent implements OnInit, OnDestroy {
 
     this.http.request<string>(req).subscribe({
       next: (event) => {
+        if( !this.chat ) return;
+
         if ( event.type == HttpEventType.Sent )
           this.chat.addMessage({role: "assistant", content: ""});
 
@@ -106,7 +113,7 @@ export class ChatMainComponent implements OnInit, OnDestroy {
     log.push({role: "user", content: message});
 
     this.http.post(`${environment.api}/chat`, log, {responseType: 'text'}).subscribe( data => {
-      if( data && data.length > 1 ) {
+      if( this.chat && data && data.length > 1 ) {
         this.chat.title = data;
         this.history.save();
       }

@@ -1,5 +1,5 @@
 <app-chat-history (onChatChange)="onChatChange($event)" [current]="chat"></app-chat-history>
-<div class="chat">
+<div class="chat" *ngIf="chat">
 
   <div class="log">
     <ng-container *ngFor="let message of chat.log; let i = index">
@@ -17,5 +17,5 @@
     <div class="spacer"></div>
 
     <app-chat-input (message)="onEnterPress($event)" [locked]="writing"></app-chat-input>
-</div>
+  </div>
 </div>
