@@ -33,7 +33,7 @@ export class ChatMainComponent implements OnInit, OnDestroy {
     this.onDestroy$.complete();
   }
 
-  onChatChange(chat: ChatHistory) {
+  onChatChange(chat: ChatHistory|null) {
     if( !this.writing ) {
       this.chat = chat;
     }
@@ -60,8 +60,18 @@ export class ChatMainComponent implements OnInit, OnDestroy {
     this.chat.next(messageIndex);
   }
 
+  onPrePrompt(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if( target && target.innerText.length > 0 )
+      this.onEnterPress(target.innerText);
+  }
   onEnterPress(message: string) {
-    if( !this.chat ) return;
+    if( !this.chat ) {
+      this.chat = new ChatHistory();
+      this.chat.addMessage({role: "system", content: "You are an helpfull assistant."});
+      this.history.add(this.chat);
+    }
+
     this.chat.addMessage({role: "user", content: message});
     this.message = "";
 

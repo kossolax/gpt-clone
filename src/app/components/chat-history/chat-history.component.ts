@@ -10,7 +10,7 @@ import { HistoryService } from 'src/app/services/history.service';
 
 export class ChatHistoryComponent {
   @Input() current:ChatHistory|null = null;
-  @Output() onChatChange:EventEmitter<ChatHistory> = new EventEmitter<ChatHistory>();
+  @Output() onChatChange:EventEmitter<ChatHistory|null> = new EventEmitter<ChatHistory|null>();
 
 
   constructor(private historyService: HistoryService) {
@@ -32,5 +32,7 @@ export class ChatHistoryComponent {
   }
   delete(value: ChatHistory) {
     this.historyService.delete(value);
+    if( this.current === value )
+      this.onChatChange.emit(this.historyService.first);
   }
 }
