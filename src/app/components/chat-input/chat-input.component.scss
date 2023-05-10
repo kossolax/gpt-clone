@@ -1,3 +1,5 @@
+@import '../../../variables.scss';
+
 :host {
   display: flex;
   align-self: center;
@@ -7,16 +9,16 @@
   margin: 1rem;
   width: 100%;
   max-width: 42rem;
-  border-radius: 6px;
-  border: solid 1px rgb(217, 217, 217);
+  border-radius: 0.375rem;
+  border: solid 1px var(--border-color);
   box-shadow: 0 0 transparent, 0 0 transparent, 0 0 0.75rem rgba(0,0,0,.1);
-  background-color: white;
+  background-color: var(--background-color);
 
   .button, .loading {
     position: absolute;
     right: 1rem;
     top: 1rem;
-    color: rgb(142, 142, 142);
+    color: $color;
     &.button {
       cursor: pointer;
     }

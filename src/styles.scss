@@ -1,10 +1,19 @@
+@import 'variables.scss';
+
 html {
-  --background-color: rgb(255, 255, 255);
-  --color: rgb(52, 53, 65);
+  --text-color: #{$color-darkest};
+  --border-color: #{$color-secondary};
+  --background-color: #{$color-lightest};
+  --background-color-dark: #{$color-light};
+  --theme: 'light';
 }
+
 html.dark {
-  --background-color: rgb(52, 53, 65);
-  --color: rgb(255, 255, 255);
+  --text-color: #{$color-light};
+  --border-color: #{$color-secondary};
+  --background-color: #{$color-darkest};
+  --background-color-dark: #{$color-darker};
+  --theme: 'dark';
 }
 
 * {
@@ -15,14 +24,14 @@ html.dark {
   transition: 0.2s;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-
 }
 
 html, body {
   height: 100%;
   width: 100%;
 
-  font-family: Söhne,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,Helvetica Neue,Arial,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji
+  font-family: Söhne,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,Helvetica Neue,Arial,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+  background-color: var(--background-color);
 }
 
 button {
@@ -43,13 +52,13 @@ button {
   width: auto;
   height: auto;
 
-  background-color: rgb(255, 255, 255);
+  background-color: var(--background-color);
   border: rgba(0, 0, 0, 0.1) solid 1px;
-  color: rgb(64, 65, 79);
+  color: var(--text-color);
 
   &.primary {
-    background-color: rgb(16, 163, 127);
-    color: rgb(255, 255, 255);
+    background-color: $color-primary;
+    color: $color-lightest;
     border: transparent solid 1px;
   }
 }
@@ -62,6 +71,7 @@ textarea {
   appearance: none;
   resize: none;
   font-family: inherit;
+  background-color: inherit;
 
   &:focus {
     outline: none;

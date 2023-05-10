@@ -1,7 +1,9 @@
+@import '../../../variables.scss';
+
 :host {
   background-color: rgb(32, 33, 35);
-  border: 0px solid rgb(217, 217, 217);
-  color: white;
+  border: 0px solid $color-secondary;
+  color: $color-lightest;
   display: flex;
   width: 260px;
 
@@ -21,7 +23,7 @@
         width: 100%;
 
         &:hover {
-          background-color: hsla(240, 9%, 59%, 0.1);
+          background-color: rgba(141, 141, 160, 0.1);
         }
       }
 

@@ -1,10 +1,12 @@
+@import '../../../variables.scss';
+
 :host {
   display: block;
   padding: 0.5rem 1rem;
   font-size: 0.75rem;
   background-color: inherit;
   border: 0;
-  color: rgb(217, 217, 227);
+  color: $color-light;
   cursor: pointer;
 
   span {
