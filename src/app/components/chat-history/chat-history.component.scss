@@ -27,6 +27,7 @@
         margin-bottom: 0.25rem;
         width: 100%;
 
+        @include animate;
         &:hover {
           background-color: rgba(141, 141, 160, 0.1);
         }
@@ -60,6 +61,7 @@
             padding: 0.75rem;
             border-radius: 6px;
 
+            @include animate;
             &:hover {
               background-color: rgb(42, 43, 50);
             }

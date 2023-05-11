@@ -9,3 +9,9 @@ $color-secondary: rgb(217, 217, 217);
 $color-light: rgb(236, 236, 241);
 $color-lighter: rgb(247, 247, 247);
 $color-lightest: rgb(255, 255, 255);
+
+@mixin animate($duration: 0.2s) {
+  transition: $duration;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}

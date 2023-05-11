@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -14,12 +14,16 @@ import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { ChatInputComponent } from './components/chat-input/chat-input.component';
 import { ClipboardButtonComponent } from './components/clipboard/clipboard.component';
 import { CommonModule } from '@angular/common';
+import { WelcomeComponent } from './components/welcome/welcome.component';
+import { setGlobalInjector } from './classes/chat';
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    WelcomeComponent,
     ChatMainComponent,
+
     ChatRowComponent,
     ChatHistoryComponent,
     ChatInputComponent
@@ -62,4 +66,8 @@ import { CommonModule } from '@angular/common';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(injector: Injector) {
+    setGlobalInjector(injector);
+  }
+}

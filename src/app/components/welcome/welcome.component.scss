@@ -1,0 +1,49 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  .log {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      width: 18rem;
+
+      svg {
+        display: block;
+        width: 2rem;
+        height: 2rem;
+      }
+      span {
+        display: block;
+        background-color: var(--background-color-dark);
+        padding: 1rem;
+        border-radius: 0.25rem;
+        text-align: center;
+        cursor: pointer;
+
+        &::before {
+          content: '"';
+        }
+        &::after {
+          content: '" →';
+        }
+      }
+    }
+  }
+}

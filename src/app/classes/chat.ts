@@ -1,3 +1,11 @@
+import { Injector } from "@angular/core";
+import { ChatService } from "../services/chat.service";
+
+let globalInjector: Injector | null = null;
+export function setGlobalInjector(injector: Injector) {
+  globalInjector = injector;
+}
+
 export interface ChatInput {
   role: "system" | "user" | "assistant";
   content: string;
@@ -8,10 +16,23 @@ interface Node {
   parent: Node|null;
   children: Node[];
 }
+function generateUUID(): string {
+  let currentDate = new Date().getTime();
+  const uuidFormat = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+
+  return uuidFormat.replace(/[xy]/g, function(c) {
+    const randomValue = (currentDate + Math.random() * 16) % 16 | 0;
+    currentDate = Math.floor(currentDate / 16);
+    return (c === 'x' ? randomValue : (randomValue & 0x3) | 0x8).toString(16);
+  });
+}
 
 export class ChatHistory {
   title: string|null = null;
   date: Date|null = null;
+  uuid: string = generateUUID();
+  writing: boolean = false;
+
   private root: Node|null = null;
   private currentBranch: Node|null = null;
 
@@ -144,6 +165,8 @@ export class ChatHistory {
     this.currentBranch = bottomNode;
   }
 
+  // --------------------
+
   serialize(): string {
     return JSON.stringify(this, (key: string, value: any) => {
       if (key === 'parent')
@@ -164,6 +187,7 @@ export class ChatHistory {
     history.title = json.title;
     history.date = new Date(json.date);
     history.root = json.root;
+    history.uuid = json.uuid || generateUUID();
 
     if (history.root) {
       restoreParents(history.root, null);
@@ -174,5 +198,26 @@ export class ChatHistory {
     }
 
     return history;
+  }
+
+  // --------------------
+
+  generateAnwser() {
+    if (!globalInjector)
+      throw new Error('Global injector is not set');
+
+    this.writing = true;
+    globalInjector
+      .get(ChatService)
+      .generateAnwser(this)
+      .subscribe(() =>  this.writing = false);
+  }
+  generateTitle(message: string) {
+    if (!globalInjector)
+      throw new Error('Global injector is not set');
+
+    globalInjector
+      .get(ChatService)
+      .generateTitle(this, message);
   }
 }

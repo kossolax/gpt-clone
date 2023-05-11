@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { ChatHistory } from 'src/app/classes/chat';
 import { HistoryService } from 'src/app/services/history.service';
 
@@ -10,29 +11,35 @@ import { HistoryService } from 'src/app/services/history.service';
 
 export class ChatHistoryComponent {
   @Input() current:ChatHistory|null = null;
-  @Output() onChatChange:EventEmitter<ChatHistory|null> = new EventEmitter<ChatHistory|null>();
 
-
-  constructor(private historyService: HistoryService) {
+  constructor(
+    private history: HistoryService,
+    private router: Router
+    ) {
   }
 
   get historyRange() {
-    return this.historyService.historyRange;
+    return this.history.historyRange;
   }
 
   create() {
     const chat = new ChatHistory();
     chat.addMessage({role: "system", content: "You are an helpfull assistant."});
     chat.addMessage({role: "assistant", content: "Hello, how can I help you?"});
-    this.historyService.add(chat);
-    this.onChatChange.emit(chat);
+    this.history.add(chat);
+
+    this.router.navigate(['/c', chat.uuid]);
   }
   change(value: ChatHistory) {
-    this.onChatChange.emit(value);
+    this.router.navigate(['/c', value.uuid]);
   }
   delete(value: ChatHistory) {
-    this.historyService.delete(value);
-    if( this.current === value )
-      this.onChatChange.emit(this.historyService.first);
+    this.history.delete(value);
+    if( this.current === value ) {
+      if( this.history.first )
+        this.router.navigate(['/c', this.history.first.uuid]);
+      else
+        this.router.navigate(['/']);
+    }
   }
 }

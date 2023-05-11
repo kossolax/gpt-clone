@@ -1,11 +1,11 @@
-<app-chat-history (onChatChange)="onChatChange($event)" [current]="chat"></app-chat-history>
+<app-chat-history [current]="chat"></app-chat-history>
 <div class="chat" *ngIf="chat">
 
   <div class="log">
     <ng-container *ngFor="let message of chat.log; let i = index">
       <app-chat-row
         [message]="message"
-        [writing]="message.role === 'assistant' && i === chat.log.length - 1 && writing"
+        [writing]="message.role === 'assistant' && i === chat.log.length - 1 && chat.writing"
         [branchIndex]="chat.branchIndex(i)"
         [branchCount]="chat.branchCount(i)"
         (messageUpdate)="onMessageUpdate($event, i)"
@@ -16,42 +16,6 @@
 
     <div class="spacer"></div>
 
-    <app-chat-input (message)="onEnterPress($event)" [locked]="writing"></app-chat-input>
+    <app-chat-input (message)="onEnterPress($event)" [locked]="chat.writing"></app-chat-input>
   </div>
-</div>
-<div class="welcome" *ngIf="!chat">
-  <div class="spacer"></div>
-  <h1>ChatGPT</h1>
-  <div class="spacer"></div>
-
-  <div class="log">
-
-    <div>
-      <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"  height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-      <strong>Examples</strong>
-      <span (click)="onPrePrompt($event)">Explain quantum computing in simple terms</span>
-      <span (click)="onPrePrompt($event)">Got any creative ideas for a 10 year old's birthday?</span>
-      <span (click)="onPrePrompt($event)">How do I make an HTTP request in Javascript</span>
-    </div>
-
-    <div>
-      <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"></path></svg>
-      <strong>Capabilities</strong>
-      <span>Remembers what user said earlier in the conversation</span>
-      <span>Allows user to provide follow-up corrections</span>
-      <span>Trained to decline inappropriate requests</span>
-    </div>
-
-    <div>
-      <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-      <strong>Limitations</strong>
-      <span>May occasionally generate incorrect information</span>
-      <span>May occasionally produce harmful instructions or biased content</span>
-      <span>Limited knowledge of world and events after 2021</span>
-    </div>
-  </div>
-
-  <div class="spacer"></div>
-
-  <app-chat-input (message)="onEnterPress($event)" [locked]="writing"></app-chat-input>
 </div>

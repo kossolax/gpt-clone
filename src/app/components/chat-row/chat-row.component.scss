@@ -22,6 +22,7 @@
     height: 1.5rem;
     width: 1.5rem;
 
+    @include animate;
     &:hover {
       background-color: var(--background-color-dark);
       color: var(--text-color);
@@ -87,6 +88,7 @@
 
   }
 
+  @include animate;
   &:hover .navigation, &:hover .rating {
     visibility: visible !important;
   }

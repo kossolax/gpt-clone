@@ -50,7 +50,6 @@ export class HistoryService {
       this.save();
     }
   }
-
   save(): void {
     const data = this.history.map( i => i.serialize() );
     localStorage.setItem('history', JSON.stringify(data));
@@ -63,6 +62,9 @@ export class HistoryService {
         this.history = data.map(i => ChatHistory.deserialize(i));
       }
     }
+  }
+  get(uuid: string): ChatHistory|null {
+    return this.history.find(history => history.uuid === uuid) || null;
   }
 
 
