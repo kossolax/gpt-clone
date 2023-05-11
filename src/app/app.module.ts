@@ -15,8 +15,6 @@ import { ChatInputComponent } from './components/chat-input/chat-input.component
 import { ClipboardButtonComponent } from './components/clipboard/clipboard.component';
 import { CommonModule } from '@angular/common';
 import { WelcomeComponent } from './components/welcome/welcome.component';
-import { setGlobalInjector } from './classes/chat';
-
 
 @NgModule({
   declarations: [
@@ -67,7 +65,4 @@ import { setGlobalInjector } from './classes/chat';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(injector: Injector) {
-    setGlobalInjector(injector);
-  }
 }

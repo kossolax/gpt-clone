@@ -1,11 +1,6 @@
 import { Injector } from "@angular/core";
 import { ChatService } from "../services/chat.service";
 
-let globalInjector: Injector | null = null;
-export function setGlobalInjector(injector: Injector) {
-  globalInjector = injector;
-}
-
 export interface ChatInput {
   role: "system" | "user" | "assistant";
   content: string;
@@ -198,28 +193,5 @@ export class ChatHistory {
     }
 
     return history;
-  }
-
-  // --------------------
-
-  generateAnwser() {
-    if( this.writing ) return;
-
-    if (!globalInjector)
-      throw new Error('Global injector is not set');
-
-    this.writing = true;
-    globalInjector
-      .get(ChatService)
-      .generateAnwser(this)
-      .subscribe(() =>  this.writing = false);
-  }
-  generateTitle(message: string) {
-    if (!globalInjector)
-      throw new Error('Global injector is not set');
-
-    globalInjector
-      .get(ChatService)
-      .generateTitle(this, message);
   }
 }

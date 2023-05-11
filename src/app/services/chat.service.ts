@@ -16,6 +16,9 @@ export class ChatService {
   ) { }
 
   generateAnwser(chat: ChatHistory) {
+    if( chat.writing ) return;
+
+    chat.writing = true;
     const sub = new Subject();
 
     const req = new HttpRequest('POST', `${environment.api}/chat`, chat.log, {
@@ -33,6 +36,7 @@ export class ChatService {
           chat.log[chat.log.length-1].content = (event as HttpDownloadProgressEvent).partialText as string;
 
         if ( event.type == HttpEventType.Response ) {
+          chat.writing = false;
           this.history.save();
           sub.next(event);
         }

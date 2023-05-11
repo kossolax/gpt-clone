@@ -5,6 +5,7 @@ import { EMPTY, Subject, catchError, map, switchMap, takeUntil, tap, timer } fro
 import { environment } from 'src/environments/environment';
 import { HistoryService } from 'src/app/services/history.service';
 import { ActivatedRoute } from '@angular/router';
+import { ChatService } from 'src/app/services/chat.service';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class ChatMainComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private history: HistoryService,
+    private chatService: ChatService,
     private route: ActivatedRoute
   ) {
     this.route.params.subscribe( params => {
@@ -50,7 +52,7 @@ export class ChatMainComponent implements OnInit, OnDestroy {
 
     this.chat.fork(messageIndex);
     this.chat.log[ messageIndex ].content = message;
-    this.chat.generateAnwser();
+    this.chatService.generateAnwser(this.chat);
   }
   onMessagePrevious(messageIndex: number) {
     if( !this.chat ) return;
@@ -72,8 +74,8 @@ export class ChatMainComponent implements OnInit, OnDestroy {
     this.message = "";
 
     this.history.save();
-    this.chat.generateAnwser();
+    this.chatService.generateAnwser(this.chat);
     if( this.chat.title === null )
-      this.chat.generateTitle(message);
+      this.chatService.generateTitle(this.chat, message);
   }
 }

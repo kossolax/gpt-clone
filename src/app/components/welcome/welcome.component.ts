@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChatHistory } from 'src/app/classes/chat';
+import { ChatService } from 'src/app/services/chat.service';
 import { HistoryService } from 'src/app/services/history.service';
 
 @Component({
@@ -12,6 +13,7 @@ export class WelcomeComponent {
 
   constructor(
     private history: HistoryService,
+    private chatService: ChatService,
     private router: Router
     ) {
 
@@ -27,8 +29,8 @@ export class WelcomeComponent {
     const chat = new ChatHistory();
     chat.addMessage({role: "system", content: "You are an helpfull assistant."});
     chat.addMessage({role: "user", content: message});
-    chat.generateAnwser();
-    chat.generateTitle(message);
+    this.chatService.generateAnwser(chat, );
+    this.chatService.generateTitle(chat, message);
 
     this.history.add(chat);
     this.router.navigate(['/c', chat.uuid]);
