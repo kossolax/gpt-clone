@@ -2,7 +2,7 @@
 
 html {
   --text-color: #{$color-darkest};
-  --border-color: #{$color-secondary};
+  --border-color: rgba(0, 0, 0, 0.1);
   --background-color: #{$color-lightest};
   --background-color-dark: #{$color-light};
   --theme: 'light';
@@ -10,7 +10,7 @@ html {
 
 html.dark {
   --text-color: #{$color-light};
-  --border-color: #{$color-secondary};
+  --border-color: rgba(32, 32, 32, 0.5);;
   --background-color: #{$color-darkest};
   --background-color-dark: #{$color-darker};
   --theme: 'dark';
