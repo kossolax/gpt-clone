@@ -1,3 +1,4 @@
+@import '../../../variables.scss';
 
 :host {
   display: flex;
@@ -13,10 +14,11 @@
     .log {
       display: flex;
       flex-direction: column;
-      overflow: auto;
       width: 100%;
       height: auto;
       min-height: 100%;
+
+      @include scrollbar();
     }
   }
 }
