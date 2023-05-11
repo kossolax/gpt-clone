@@ -203,6 +203,8 @@ export class ChatHistory {
   // --------------------
 
   generateAnwser() {
+    if( this.writing ) return;
+
     if (!globalInjector)
       throw new Error('Global injector is not set');
 
